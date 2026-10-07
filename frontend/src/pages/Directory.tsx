@@ -48,14 +48,14 @@ export default function Directory() {
   }, [inbox.outgoing]);
 
   const card = (p: Person, i: number) => (
-    <MemberCard key={p.id} person={p} index={i} isSelf={p.id === active?.id} requestStatus={statusFor.get(p.id) ?? null} onRequest={setTarget} />
+    <MemberCard key={p.id} person={p} index={i} isSelf={p.id === active?.id} requestStatus={statusFor.get(p.id) ?? null} canMessage={Boolean(active)} onRequest={setTarget} />
   );
 
   const title = interest ? INTEREST_MAP[interest as InterestId]?.label ?? "Directory" : "Directory";
 
   return (
     <main className="relative min-h-screen overflow-x-clip pt-28 md:pt-36" data-testid="directory-page">
-      <div className="pointer-events-none absolute left-0 top-0 h-[480px] w-[480px] rounded-full bg-[#d7ff3a]/[0.06] blur-[140px]" />
+      <div className="pointer-events-none absolute left-0 top-0 h-[480px] w-[480px] rounded-full bg-[#2fb8ff]/[0.06] blur-[140px]" />
       <div className="relative mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -65,7 +65,7 @@ export default function Directory() {
             </h1>
           </div>
           <p className="flex items-center gap-2 font-mono text-sm text-zinc-300" data-testid="directory-result-count">
-            <Users className="h-4 w-4 text-[#d7ff3a]" /> {people.length} {people.length === 1 ? "person" : "people"}
+            <Users className="h-4 w-4 text-[#2fb8ff]" /> {people.length} {people.length === 1 ? "person" : "people"}
             {department && ` · ${department}`}
           </p>
         </div>

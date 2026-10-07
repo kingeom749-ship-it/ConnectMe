@@ -24,7 +24,7 @@ export default function Requests() {
           <ShieldCheck className="mx-auto h-10 w-10 text-[#34d399]" />
           <h1 className="mt-6 font-display text-3xl font-bold uppercase text-white">Your requests live here</h1>
           <p className="mt-3 text-zinc-300">Register to send location requests and to approve or decline the ones you receive.</p>
-          <Link to="/register" data-testid="requests-register-link" className="mt-8 inline-flex rounded-full bg-[#d7ff3a] px-7 py-4 font-semibold text-[#07080c]">
+          <Link to="/register" data-testid="requests-register-link" className="mt-8 inline-flex rounded-full bg-[#2fb8ff] px-7 py-4 font-semibold text-[#07080c]">
             Start registration
           </Link>
         </div>
@@ -66,7 +66,7 @@ export default function Requests() {
               className={cn("flex items-center gap-2 rounded-full px-5 py-3 text-sm transition-colors", tab === id ? "bg-white text-[#07080c]" : "border border-white/10 text-zinc-200 hover:border-white/30")}
             >
               <Icon className="h-4 w-4" /> {label}
-              {count > 0 && <span className="rounded-full bg-[#d7ff3a] px-2 font-mono text-[11px] text-[#07080c]">{count}</span>}
+              {count > 0 && <span className="rounded-full bg-[#2fb8ff] px-2 font-mono text-[11px] text-[#07080c]">{count}</span>}
             </button>
           ))}
         </div>
@@ -78,7 +78,7 @@ export default function Requests() {
             <div className="rounded-[28px] border border-dashed border-white/15 p-10 text-center" data-testid="requests-empty">
               <p className="text-zinc-300">{tab === "incoming" ? "No one has asked for your location." : "You haven't sent any requests yet."}</p>
               {tab === "outgoing" && (
-                <Link to="/directory" data-testid="requests-browse-link" className="mt-4 inline-block text-[#d7ff3a] hover:underline">Browse the directory →</Link>
+                <Link to="/directory" data-testid="requests-browse-link" className="mt-4 inline-block text-[#2fb8ff] hover:underline">Browse the directory →</Link>
               )}
             </div>
           )}

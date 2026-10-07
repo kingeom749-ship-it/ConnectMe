@@ -58,6 +58,26 @@ export interface OtpSent {
   demo_code?: string;
 }
 
+export interface Message {
+  id: string;
+  text: string;
+  sender_id: string;
+  mine: boolean;
+  created_at: string;
+  read_at: string | null;
+}
+
+export interface Conversation {
+  person: Person;
+  last_message: Message;
+  unread: number;
+}
+
+export interface Thread {
+  person: Person;
+  messages: Message[];
+}
+
 export interface Meta {
   total: number;
   interests: Partial<Record<InterestId, number>>;
@@ -125,4 +145,9 @@ export const api = {
     req<LocationRequest>(`/location-requests/${id}/meetup`, { method: "POST", token, body }),
   respondMeetup: (token: string, id: string, accept: boolean) =>
     req<LocationRequest>(`/location-requests/${id}/meetup/respond`, { method: "POST", token, body: { accept } }),
+  conversations: (token: string) => req<Conversation[]>("/conversations", { token }),
+  unread: (token: string) => req<{ count: number }>("/conversations/unread", { token }),
+  thread: (token: string, otherId: string) => req<Thread>(`/conversations/${otherId}`, { token }),
+  sendMessage: (token: string, otherId: string, text: string) =>
+    req<Message[]>(`/conversations/${otherId}`, { method: "POST", token, body: { text } }),
 };

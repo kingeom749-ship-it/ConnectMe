@@ -70,10 +70,10 @@ export function PhoneVerify({ phone, verified, onVerified }: Props) {
   return (
     <div className="grid gap-4">
       {sent?.mode === "demo" && (
-        <div className="flex items-start gap-3 rounded-2xl border border-dashed border-[#d7ff3a]/50 bg-[#d7ff3a]/[0.06] p-4" data-testid="reg-otp-demo-banner">
-          <FlaskConical className="mt-0.5 h-4 w-4 shrink-0 text-[#d7ff3a]" />
+        <div className="flex items-start gap-3 rounded-2xl border border-dashed border-[#2fb8ff]/50 bg-[#2fb8ff]/[0.06] p-4" data-testid="reg-otp-demo-banner">
+          <FlaskConical className="mt-0.5 h-4 w-4 shrink-0 text-[#2fb8ff]" />
           <p className="text-sm text-zinc-200">
-            <span className="font-semibold text-[#d7ff3a]">Demo mode</span> — SMS isn't connected yet, so your code is shown here:{" "}
+            <span className="font-semibold text-[#2fb8ff]">Demo mode</span> — SMS isn't connected yet, so your code is shown here:{" "}
             <span className="font-mono text-base font-semibold tracking-[0.3em] text-white" data-testid="reg-otp-demo-code">{sent.demo_code}</span>
           </p>
         </div>
@@ -82,7 +82,7 @@ export function PhoneVerify({ phone, verified, onVerified }: Props) {
         <div className="flex flex-col gap-3 sm:flex-row">
           <label className="group relative flex-1">
             <span className="sr-only">6-digit code</span>
-            <KeyRound className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#d7ff3a]" />
+            <KeyRound className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2fb8ff]" />
             <input
               value={code}
               onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
@@ -90,10 +90,10 @@ export function PhoneVerify({ phone, verified, onVerified }: Props) {
               autoComplete="one-time-code"
               placeholder="6-digit code"
               data-testid="reg-otp-code-input"
-              className="h-12 w-full rounded-full border border-white/10 bg-white/[0.03] pl-14 pr-5 font-mono tracking-[0.3em] text-white placeholder:tracking-normal placeholder:text-zinc-500 focus:border-[#d7ff3a] focus:outline-none"
+              className="h-12 w-full rounded-full border border-white/10 bg-white/[0.03] pl-14 pr-5 font-mono tracking-[0.3em] text-white placeholder:tracking-normal placeholder:text-zinc-500 focus:border-[#2fb8ff] focus:outline-none"
             />
           </label>
-          <button onClick={verify} disabled={busy || code.length !== 6} data-testid="reg-otp-verify-btn" className={`${btn} bg-[#d7ff3a] text-[#07080c]`}>
+          <button onClick={verify} disabled={busy || code.length !== 6} data-testid="reg-otp-verify-btn" className={`${btn} bg-[#2fb8ff] text-[#07080c]`}>
             {busy && <Loader2 className="h-4 w-4 animate-spin" />} Verify
           </button>
         </div>

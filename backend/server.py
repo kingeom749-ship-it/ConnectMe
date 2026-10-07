@@ -13,6 +13,7 @@ from typing import List, Optional
 import uuid
 from datetime import datetime, timezone, timedelta
 from otp import build_otp_router, consume_verification, normalize_phone, twilio_config
+from messages import build_messages_router
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -407,6 +408,8 @@ async def seed():
     await db.people.create_index("id", unique=True)
     await db.location_requests.create_index("id", unique=True)
     await db.otp_codes.create_index("phone", unique=True)
+    await db.messages.create_index([("pair", 1), ("created_at", 1)])
+    await db.messages.create_index([("recipient_id", 1), ("read_at", 1)])
     base = now() - timedelta(days=30)
     for i, (name, interests, dept) in enumerate(DEMO_PEOPLE):
         phone = f"+9100000000{i:02d}"
@@ -421,6 +424,7 @@ async def seed():
 
 app.include_router(api_router)
 app.include_router(build_otp_router(db))
+app.include_router(build_messages_router(db, current_person, Person))
 
 app.add_middleware(
     CORSMiddleware,

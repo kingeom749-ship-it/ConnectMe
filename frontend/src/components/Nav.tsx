@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Menu, X } from "lucide-react";
 import { Wordmark } from "./Logo";
 import { ProfileMenu } from "./ProfileMenu";
-import { useInbox } from "../lib/queries";
+import { useInbox, useUnreadCount } from "../lib/queries";
 import { useSession } from "../lib/session";
 import { cn } from "../lib/utils";
 
@@ -12,6 +12,7 @@ const LINKS = [
   { to: "/#interests", label: "Interests", id: "interests" },
   { to: "/directory", label: "Directory", id: "directory" },
   { to: "/requests", label: "Requests", id: "requests" },
+  { to: "/messages", label: "Messages", id: "messages" },
 ];
 
 function PendingBadge() {
@@ -19,7 +20,17 @@ function PendingBadge() {
   const n = inbox.incoming.filter((r) => r.status === "pending").length;
   if (!n) return null;
   return (
-    <span data-testid="nav-pending-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#d7ff3a] px-1 font-mono text-[11px] font-semibold text-[#07080c]">
+    <span data-testid="nav-pending-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#2fb8ff] px-1 font-mono text-[11px] font-semibold text-[#07080c]">
+      {n}
+    </span>
+  );
+}
+
+function UnreadBadge() {
+  const n = useUnreadCount();
+  if (!n) return null;
+  return (
+    <span data-testid="nav-unread-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#2fb8ff] px-1 font-mono text-[11px] font-semibold text-[#07080c]">
       {n}
     </span>
   );
@@ -55,6 +66,7 @@ export function Nav() {
             >
               {l.label}
               {l.id === "requests" && <PendingBadge />}
+              {l.id === "messages" && <UnreadBadge />}
             </NavLink>
           ))}
         </div>
@@ -65,7 +77,7 @@ export function Nav() {
             <Link
               to="/register"
               data-testid="nav-register-btn"
-              className="rounded-full bg-[#d7ff3a] px-5 py-2.5 text-sm font-semibold text-[#07080c] transition-transform hover:scale-[1.04] active:scale-95"
+              className="rounded-full bg-[#2fb8ff] px-5 py-2.5 text-sm font-semibold text-[#07080c] transition-transform hover:scale-[1.04] active:scale-95"
             >
               Join
             </Link>
@@ -100,11 +112,12 @@ export function Nav() {
                 <span className="flex items-center">
                   {l.label}
                   {l.id === "requests" && <PendingBadge />}
+                  {l.id === "messages" && <UnreadBadge />}
                 </span>
               </Link>
             ))}
             {!active && (
-              <Link to="/register" data-testid="mobile-nav-register-link" className="mt-2 block rounded-2xl bg-[#d7ff3a] px-4 py-4 text-center font-semibold text-[#07080c]">
+              <Link to="/register" data-testid="mobile-nav-register-link" className="mt-2 block rounded-2xl bg-[#2fb8ff] px-4 py-4 text-center font-semibold text-[#07080c]">
                 Start registration
               </Link>
             )}

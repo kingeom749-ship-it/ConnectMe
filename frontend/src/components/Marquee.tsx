@@ -18,7 +18,7 @@ export function Marquee() {
           >
             {w}
           </span>
-          <Asterisk className="h-8 w-8 shrink-0 text-[#d7ff3a] md:h-12 md:w-12" />
+          <Asterisk className="h-8 w-8 shrink-0 text-[#2fb8ff] md:h-12 md:w-12" />
         </Fragment>
       ))}
     </div>

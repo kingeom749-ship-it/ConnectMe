@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
-import { Check, Clock, MapPin, MapPinOff, Phone } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Check, Clock, MapPin, MapPinOff, MessageCircle, Phone } from "lucide-react";
 import { Avatar } from "./Avatar";
 import { TiltCard } from "./TiltCard";
 import { INTEREST_MAP } from "../lib/data";
@@ -11,10 +12,11 @@ interface Props {
   index: number;
   isSelf: boolean;
   requestStatus: RequestStatus | null;
+  canMessage: boolean;
   onRequest: (p: Person) => void;
 }
 
-function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index">) {
+function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index" | "canMessage">) {
   const base = "mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-[background-color,transform,color] duration-300";
   if (isSelf) return <span className={cn(base, "border border-white/10 text-zinc-400")}>This is you</span>;
   if (!person.accepts_location_requests)
@@ -25,7 +27,7 @@ function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props,
     );
   if (requestStatus === "pending")
     return (
-      <span className={cn(base, "border border-[#d7ff3a]/40 text-[#d7ff3a]")} data-testid="member-card-request-pending">
+      <span className={cn(base, "border border-[#2fb8ff]/40 text-[#2fb8ff]")} data-testid="member-card-request-pending">
         <Clock className="h-4 w-4" /> Request pending
       </span>
     );
@@ -36,7 +38,7 @@ function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props,
       </span>
     );
   return (
-    <button onClick={() => onRequest(person)} data-testid="member-card-request-location-btn" className={cn(base, "bg-white text-[#07080c] hover:scale-[1.02] hover:bg-[#d7ff3a]")}>
+    <button onClick={() => onRequest(person)} data-testid="member-card-request-location-btn" className={cn(base, "bg-white text-[#07080c] hover:scale-[1.02] hover:bg-[#2fb8ff]")}>
       <MapPin className="h-4 w-4" /> Request location
     </button>
   );
@@ -70,7 +72,7 @@ export function MemberCard(props: Props) {
               const Icon = it.icon;
               return (
                 <span key={i} className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs text-zinc-200">
-                  <Icon className="h-3.5 w-3.5 text-[#d7ff3a]" /> {it.label}
+                  <Icon className="h-3.5 w-3.5 text-[#2fb8ff]" /> {it.label}
                 </span>
               );
             })}
@@ -78,6 +80,15 @@ export function MemberCard(props: Props) {
           </div>
           <div className="mt-auto">
             <RequestButton {...props} />
+            {!props.isSelf && (
+              <Link
+                to={props.canMessage ? `/messages/${person.id}` : "/register"}
+                data-testid="member-card-message-btn"
+                className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-white/10 py-3 text-sm font-medium text-zinc-100 transition-colors hover:border-[#2fb8ff]/60 hover:bg-[#2fb8ff]/10 hover:text-white"
+              >
+                <MessageCircle className="h-4 w-4 text-[#2fb8ff]" /> Message privately
+              </Link>
+            )}
           </div>
         </article>
       </TiltCard>

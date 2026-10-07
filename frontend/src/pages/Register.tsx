@@ -102,7 +102,7 @@ export default function Register() {
             <ol className="mt-8 hidden gap-2 lg:grid" aria-label="Progress">
               {STEPS.map((s, i) => (
                 <li key={s.title} className={cn("flex items-center gap-3 text-sm", i <= step ? "text-white" : "text-zinc-400")}>
-                  <span className={cn("grid h-7 w-7 place-items-center rounded-full font-mono text-xs", i < step ? "bg-[#d7ff3a] text-[#07080c]" : i === step ? "border border-[#d7ff3a] text-[#d7ff3a]" : "border border-white/15")}>
+                  <span className={cn("grid h-7 w-7 place-items-center rounded-full font-mono text-xs", i < step ? "bg-[#2fb8ff] text-[#07080c]" : i === step ? "border border-[#2fb8ff] text-[#2fb8ff]" : "border border-white/15")}>
                     {i < step ? <Check className="h-3.5 w-3.5" /> : i + 1}
                   </span>
                   {s.title}
@@ -116,7 +116,7 @@ export default function Register() {
           <div className="mb-8 flex gap-1.5" aria-hidden>
             {STEPS.map((s, i) => (
               <div key={s.title} className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
-                <motion.div className="h-full bg-[#d7ff3a]" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.6 }} />
+                <motion.div className="h-full bg-[#2fb8ff]" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.6 }} />
               </div>
             ))}
           </div>
@@ -152,10 +152,10 @@ export default function Register() {
               onClick={next}
               disabled={!canNext || saving}
               data-testid={step === 3 ? "reg-step4-submit-btn" : `reg-step${step + 1}-next-btn`}
-              className="group inline-flex items-center gap-3 rounded-full bg-[#d7ff3a] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-[transform,opacity] hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#2fb8ff] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-[transform,opacity] hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-40"
             >
               {step === 3 ? "Create profile" : "Continue"}
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#d7ff3a]">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#2fb8ff]">
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />}
               </span>
             </button>

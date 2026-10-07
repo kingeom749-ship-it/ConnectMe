@@ -45,7 +45,7 @@ export function InteractiveHoverLinks({ items, className }: InteractiveHoverLink
         <motion.div
           animate={{ scale: active ? 1 : 0.4, opacity: active ? 1 : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 26 }}
-          className="relative -translate-x-1/2 -translate-y-1/2 h-64 w-48 overflow-hidden rounded-2xl ring-1 ring-white/20 shadow-[0_30px_80px_-20px_rgba(215,255,58,0.35)] lg:h-80 lg:w-60"
+          className="relative -translate-x-1/2 -translate-y-1/2 h-64 w-48 overflow-hidden rounded-2xl ring-1 ring-white/20 shadow-[0_30px_80px_-20px_rgba(47,184,255,0.35)] lg:h-80 lg:w-60"
         >
           {items.map((it) => (
             <img
@@ -94,7 +94,7 @@ function HoverRow({ item, index, active, onEnter }: RowProps) {
           <span
             className={cn(
               "block font-display text-3xl font-semibold uppercase leading-none tracking-tight transition-[color,transform] duration-500 ease-out sm:text-5xl lg:text-7xl",
-              "group-hover:translate-x-3 group-hover:text-[#d7ff3a] md:group-hover:translate-x-6",
+              "group-hover:translate-x-3 group-hover:text-[#2fb8ff] md:group-hover:translate-x-6",
               dim ? "md:text-white/30" : "text-[#f4f4f0]"
             )}
           >
@@ -103,7 +103,7 @@ function HoverRow({ item, index, active, onEnter }: RowProps) {
           {item.caption && <span className="mt-2 block text-sm text-zinc-400 md:hidden">{item.caption}</span>}
         </span>
         <span className="hidden text-right text-sm text-zinc-400 md:block">{item.meta}</span>
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/15 transition-[background-color,transform,border-color] duration-500 group-hover:rotate-45 group-hover:border-[#d7ff3a] group-hover:bg-[#d7ff3a] md:h-14 md:w-14">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/15 transition-[background-color,transform,border-color] duration-500 group-hover:rotate-45 group-hover:border-[#2fb8ff] group-hover:bg-[#2fb8ff] md:h-14 md:w-14">
           <ArrowUpRight className="h-5 w-5 text-[#f4f4f0] transition-colors group-hover:text-[#07080c]" />
         </span>
       </Link>

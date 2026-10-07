@@ -16,7 +16,7 @@ interface Props {
 const pill = (on: boolean) =>
   cn(
     "inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-[background-color,border-color,color] duration-300",
-    on ? "border-[#d7ff3a] bg-[#d7ff3a] text-[#07080c]" : "border-white/10 text-zinc-200 hover:border-white/30"
+    on ? "border-[#2fb8ff] bg-[#2fb8ff] text-[#07080c]" : "border-white/10 text-zinc-200 hover:border-white/30"
   );
 
 export function DirectoryFilters(p: Props) {
@@ -25,13 +25,13 @@ export function DirectoryFilters(p: Props) {
       <div className="flex flex-col gap-3 sm:flex-row">
         <label className="group relative flex-1">
           <span className="sr-only">Search by name or full phone number</span>
-          <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#d7ff3a]" />
+          <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2fb8ff]" />
           <input
             value={p.q}
             onChange={(e) => p.onQ(e.target.value)}
             placeholder="Search by name or full phone number"
             data-testid="directory-search-input"
-            className="h-14 w-full rounded-full border border-white/10 bg-white/[0.03] pl-14 pr-5 text-white placeholder:text-zinc-500 focus:border-[#d7ff3a] focus:outline-none"
+            className="h-14 w-full rounded-full border border-white/10 bg-white/[0.03] pl-14 pr-5 text-white placeholder:text-zinc-500 focus:border-[#2fb8ff] focus:outline-none"
           />
         </label>
         <select
@@ -39,7 +39,7 @@ export function DirectoryFilters(p: Props) {
           onChange={(e) => p.onDepartment(e.target.value)}
           aria-label="Filter by department"
           data-testid="directory-department-filter-select"
-          className="h-14 rounded-full border border-white/10 bg-[#0e1016] px-5 text-white focus:border-[#d7ff3a] focus:outline-none"
+          className="h-14 rounded-full border border-white/10 bg-[#0e1016] px-5 text-white focus:border-[#2fb8ff] focus:outline-none"
         >
           <option value="">All departments</option>
           {DEPARTMENTS.map((d) => (

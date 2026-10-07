@@ -1,21 +1,22 @@
 import { cn } from "../lib/utils";
 
 export function LogoMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 32 32" className={cn("h-8 w-8", className)} aria-hidden>
-      <rect width="32" height="32" rx="9" fill="#D7FF3A" />
-      <path d="M21.6 10.2a8.2 8.2 0 1 0 0 11.6" fill="none" stroke="#07080C" strokeWidth="3.4" strokeLinecap="round" />
-      <circle cx="23" cy="16" r="2.7" fill="#07080C" />
-    </svg>
-  );
+  return <img src="/logo-mark.png" alt="" className={cn("h-9 w-9 select-none drop-shadow-[0_0_14px_rgba(47,184,255,0.45)]", className)} aria-hidden draggable={false} />;
 }
 
-export function Wordmark({ className }: { className?: string }) {
+export function Wordmark({ className, tagline = false }: { className?: string; tagline?: boolean }) {
   return (
-    <span className={cn("flex items-center gap-2.5", className)}>
+    <span className={cn("flex items-center gap-2.5", className)} data-testid="brand-wordmark">
       <LogoMark />
-      <span className="font-display text-base font-semibold tracking-tight text-[#f4f4f0]">
-        Connect<span className="text-[#d7ff3a]">Me</span>
+      <span className="flex flex-col leading-none">
+        <span className="font-display text-lg font-bold tracking-tight text-[#f4f4f0]">
+          Connect<span className="bg-gradient-to-r from-[#2fb8ff] to-[#1e63ff] bg-clip-text text-transparent">Me</span>
+        </span>
+        {tagline && (
+          <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.28em] text-zinc-400">
+            Find People <span className="text-[#2fb8ff]">•</span> Build Connections
+          </span>
+        )}
       </span>
     </span>
   );

@@ -19,7 +19,7 @@ function Field({ id, label, icon, error, children }: { id: string; label: string
         {label}
       </label>
       <div className="group relative">
-        <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#d7ff3a]">{icon}</span>
+        <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2fb8ff]">{icon}</span>
         {children}
       </div>
       {error && (
@@ -32,7 +32,7 @@ function Field({ id, label, icon, error, children }: { id: string; label: string
 }
 
 const inputCls =
-  "h-16 w-full rounded-2xl border border-white/10 bg-white/[0.03] pl-14 pr-5 text-lg text-white placeholder:text-zinc-500 transition-colors focus:border-[#d7ff3a] focus:bg-white/[0.05] focus:outline-none";
+  "h-16 w-full rounded-2xl border border-white/10 bg-white/[0.03] pl-14 pr-5 text-lg text-white placeholder:text-zinc-500 transition-colors focus:border-[#2fb8ff] focus:bg-white/[0.05] focus:outline-none";
 
 export function StepIdentity({ name, phone, onName, onPhone, errors, verified, onVerified }: Props) {
   return (

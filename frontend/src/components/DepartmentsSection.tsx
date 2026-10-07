@@ -28,10 +28,10 @@ export function DepartmentsSection() {
                 <Link
                   to={`/directory?department=${encodeURIComponent(d)}`}
                   data-testid={`dept-tile-${slug(d)}`}
-                  className="group flex h-64 flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-[#161922] to-[#0e1016] p-6 transition-colors hover:border-[#d7ff3a]/60"
+                  className="group flex h-64 flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-[#161922] to-[#0e1016] p-6 transition-colors hover:border-[#2fb8ff]/60"
                 >
                   <div className="flex items-start justify-between">
-                    <Icon className="h-6 w-6 text-[#d7ff3a]" />
+                    <Icon className="h-6 w-6 text-[#2fb8ff]" />
                     <ArrowUpRight className="h-5 w-5 text-zinc-400 transition-transform duration-500 group-hover:rotate-45 group-hover:text-white" />
                   </div>
                   <div>

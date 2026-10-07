@@ -70,10 +70,10 @@ export function MeetupPanel({ request: r, loc, isSharer }: Props) {
               onChange={(e) => setLabel(e.target.value.slice(0, 60))}
               placeholder="Name the spot, e.g. Library steps"
               data-testid="meetup-label-input"
-              className="h-12 w-full rounded-full border border-white/10 bg-[#07080c]/60 px-5 text-white placeholder:text-zinc-500 focus:border-[#d7ff3a] focus:outline-none"
+              className="h-12 w-full rounded-full border border-white/10 bg-[#07080c]/60 px-5 text-white placeholder:text-zinc-500 focus:border-[#2fb8ff] focus:outline-none"
             />
             <div className="flex flex-wrap gap-2">
-              <button onClick={send} disabled={busy || !draft || label.trim().length < 2} data-testid="meetup-send-btn" className={`${pill} bg-[#d7ff3a] text-[#07080c]`}>
+              <button onClick={send} disabled={busy || !draft || label.trim().length < 2} data-testid="meetup-send-btn" className={`${pill} bg-[#2fb8ff] text-[#07080c]`}>
                 {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Flag className="h-4 w-4" />} Suggest this spot
               </button>
               <button onClick={stopPicking} data-testid="meetup-cancel-pick-btn" className={`${pill} border border-white/15 text-white`}>
@@ -119,9 +119,9 @@ function MeetupStatus({ request: r, other, busy, onSuggest, onAnswer }: StatusPr
   if (m.status === "accepted") {
     return (
       <div className={row} data-testid="meetup-confirmed">
-        <p className="flex items-center gap-2 text-sm text-white"><Check className="h-4 w-4 text-[#d7ff3a]" /> Meeting at <span className="font-semibold">{m.label}</span></p>
+        <p className="flex items-center gap-2 text-sm text-white"><Check className="h-4 w-4 text-[#2fb8ff]" /> Meeting at <span className="font-semibold">{m.label}</span></p>
         <div className="flex flex-wrap gap-2">
-          <a href={`https://www.openstreetmap.org/directions?to=${m.lat},${m.lng}`} target="_blank" rel="noreferrer" data-testid="meetup-directions-link" className={`${pill} bg-[#d7ff3a] text-[#07080c]`}>
+          <a href={`https://www.openstreetmap.org/directions?to=${m.lat},${m.lng}`} target="_blank" rel="noreferrer" data-testid="meetup-directions-link" className={`${pill} bg-[#2fb8ff] text-[#07080c]`}>
             Directions <ExternalLink className="h-3.5 w-3.5" />
           </a>
           {suggestBtn("Change")}
@@ -135,7 +135,7 @@ function MeetupStatus({ request: r, other, busy, onSuggest, onAnswer }: StatusPr
       <div className={row} data-testid="meetup-incoming-proposal">
         <p className="text-sm text-white">{other} suggests <span className="font-semibold">{m.label}</span></p>
         <div className="flex gap-2">
-          <button onClick={() => onAnswer(true)} disabled={busy} data-testid="meetup-accept-btn" className={`${pill} bg-[#d7ff3a] text-[#07080c]`}><Check className="h-4 w-4" /> Accept</button>
+          <button onClick={() => onAnswer(true)} disabled={busy} data-testid="meetup-accept-btn" className={`${pill} bg-[#2fb8ff] text-[#07080c]`}><Check className="h-4 w-4" /> Accept</button>
           <button onClick={() => onAnswer(false)} disabled={busy} data-testid="meetup-decline-btn" className={`${pill} border border-white/15 text-white`}><X className="h-4 w-4" /> Decline</button>
         </div>
       </div>

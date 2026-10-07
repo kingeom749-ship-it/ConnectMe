@@ -13,7 +13,7 @@ export function InterestsSection() {
     caption: it.tagline,
     meta: (
       <>
-        {it.trending && <span className="mb-1 inline-block rounded-full border border-[#d7ff3a]/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#d7ff3a]" data-testid={`interest-trending-${it.id}`}>Trending 2026</span>}
+        {it.trending && <span className="mb-1 inline-block rounded-full border border-[#2fb8ff]/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#2fb8ff]" data-testid={`interest-trending-${it.id}`}>Trending 2026</span>}
         <span className="block text-zinc-300">{it.tagline}</span>
         <span className="font-mono text-xs text-zinc-400">{meta?.interests?.[it.id] ?? 0} {meta?.interests?.[it.id] === 1 ? "member" : "members"}</span>
       </>

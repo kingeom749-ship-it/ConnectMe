@@ -22,7 +22,7 @@ export function Manifesto() {
         {words.map((w, i) => (
           <motion.span
             key={i}
-            className={`mr-[0.28em] inline-block ${w.startsWith("yes") || w === "never" ? "text-[#d7ff3a]" : ""}`}
+            className={`mr-[0.28em] inline-block ${w.startsWith("yes") || w === "never" ? "text-[#2fb8ff]" : ""}`}
             variants={{ hidden: { opacity: 0.15, y: 14, filter: "blur(6px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)" } }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
@@ -52,15 +52,15 @@ export function FinalCta() {
             <h2 className="font-display text-4xl font-bold uppercase leading-[0.95] text-white sm:text-6xl lg:text-7xl">
               Your people
               <br />
-              are <span className="text-[#d7ff3a]">already here.</span>
+              are <span className="text-[#2fb8ff]">already here.</span>
             </h2>
             <Link
               to="/register"
               data-testid="final-register-cta"
-              className="group mt-8 inline-flex w-fit items-center gap-3 rounded-full bg-[#d7ff3a] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.03]"
+              className="group mt-8 inline-flex w-fit items-center gap-3 rounded-full bg-[#2fb8ff] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.03]"
             >
               Create my profile
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#d7ff3a] transition-transform duration-500 group-hover:rotate-[-45deg]">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#2fb8ff] transition-transform duration-500 group-hover:rotate-[-45deg]">
                 <ArrowRight className="h-4 w-4" />
               </span>
             </Link>
@@ -74,7 +74,7 @@ export function FinalCta() {
 export function Footer() {
   return (
     <footer className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between md:px-8" data-testid="site-footer">
-      <Wordmark />
+      <Wordmark tagline />
       <p className="text-sm text-zinc-400">Consent-first campus network · © 2026 ConnectMe</p>
       <Link to="/directory" data-testid="footer-directory-link" className="text-sm text-zinc-300 hover:text-white">
         Open the directory →

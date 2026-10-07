@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Check, Clock, MapPin, X } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Check, Clock, MapPin, MessageCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar } from "./Avatar";
 import { MeetupPanel } from "./MeetupPanel";
@@ -10,7 +11,7 @@ import { useRefresh } from "../lib/queries";
 import { cn } from "../lib/utils";
 
 const STATUS: Record<RequestStatus, { label: string; cls: string }> = {
-  pending: { label: "Pending", cls: "border-[#d7ff3a]/40 text-[#d7ff3a]" },
+  pending: { label: "Pending", cls: "border-[#2fb8ff]/40 text-[#2fb8ff]" },
   shared: { label: "Sharing", cls: "border-[#34d399]/50 bg-[#34d399]/10 text-[#34d399]" },
   declined: { label: "Declined", cls: "border-white/15 text-zinc-300" },
   revoked: { label: "Revoked", cls: "border-white/15 text-zinc-300" },
@@ -61,6 +62,11 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
         </div>
         <span className={cn("rounded-full border px-3 py-1 text-xs", s.cls)} data-testid="request-status-badge">{s.label}</span>
       </div>
+      {person && (
+        <Link to={`/messages/${person.id}`} data-testid="request-card-message-link" className="mt-4 inline-flex items-center gap-2 text-sm text-zinc-300 transition-colors hover:text-[#2fb8ff]">
+          <MessageCircle className="h-4 w-4 text-[#2fb8ff]" /> Message {person.name.split(" ")[0]} privately
+        </Link>
+      )}
       {r.note && <p className="mt-4 rounded-2xl bg-white/[0.03] px-4 py-3 text-sm text-zinc-200">“{r.note}”</p>}
 
       {direction === "incoming" && r.status === "pending" && (

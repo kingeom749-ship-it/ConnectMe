@@ -10,7 +10,7 @@
         --ink: #07080c;
         --ink-2: #0e1016;
         --ink-3: #161922;
-        --lime: #d7ff3a;
+        --accent: #2fb8ff;
         --iris: #8b91ff;
         --signal: #34d399;
         --bone: #f4f4f0;
@@ -51,11 +51,11 @@
         @apply bg-background text-foreground font-sans antialiased;
     }
     ::selection {
-        background: var(--lime);
+        background: var(--accent);
         color: var(--ink);
     }
     :focus-visible {
-        outline: 2px solid var(--lime);
+        outline: 2px solid var(--accent);
         outline-offset: 3px;
     }
 }
@@ -75,7 +75,7 @@
         color: var(--iris);
     }
     .eyebrow {
-        @apply font-mono text-xs uppercase tracking-[0.25em] text-[#d7ff3a];
+        @apply font-mono text-xs uppercase tracking-[0.25em] text-[#2fb8ff];
     }
     .glass {
         background: rgba(14, 16, 22, 0.66);
@@ -93,7 +93,7 @@
     border: 3px solid #07080c;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
 }
-.cm-pin--accepted { background: #d7ff3a; }
+.cm-pin--accepted { background: #2fb8ff; }
 .cm-pin--proposed { background: #8b91ff; }
 .cm-pin--declined { background: #71717a; }
 .cm-pin--draft { background: #ffffff; animation: pin-drop 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -115,10 +115,18 @@
     transform-style: preserve-3d;
 }
 
+.logo-float {
+    animation: logo-float 5s ease-in-out infinite;
+}
+@keyframes logo-float {
+    0%, 100% { transform: translateY(-6px) rotate(-3deg); }
+    50% { transform: translateY(6px) rotate(3deg); }
+}
+
 .grid-floor {
     background-image:
-        linear-gradient(rgba(215, 255, 58, 0.22) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(215, 255, 58, 0.22) 1px, transparent 1px);
+        linear-gradient(rgba(47, 184, 255, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(47, 184, 255, 0.22) 1px, transparent 1px);
     background-size: 64px 64px;
     animation: floor 6s linear infinite;
     mask-image: linear-gradient(to top, black 10%, transparent 75%);

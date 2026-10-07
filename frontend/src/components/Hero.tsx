@@ -57,7 +57,7 @@ export function Hero() {
   return (
     <section ref={ref} onPointerMove={onMove} className="grain relative min-h-[100svh] overflow-hidden pt-28 md:pt-36" data-testid="hero-section">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -left-40 top-20 h-[520px] w-[520px] rounded-full bg-[#d7ff3a]/10 blur-[140px]" />
+        <div className="absolute -left-40 top-20 h-[520px] w-[520px] rounded-full bg-[#2fb8ff]/10 blur-[140px]" />
         <div className="absolute -right-20 top-40 h-[480px] w-[480px] rounded-full bg-[#8b91ff]/15 blur-[140px]" />
         <div className="absolute inset-x-0 bottom-0 h-[45%] [perspective:600px]">
           <div className="grid-floor absolute inset-x-[-50%] bottom-[-30%] h-[160%] [transform:rotateX(72deg)]" />
@@ -67,7 +67,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-5 md:px-8 lg:grid-cols-12 lg:items-center">
         <motion.div style={{ y: textY }} className="lg:col-span-7">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="eyebrow mb-6">
-            Campus network · {INTERESTS.length} scenes · 5 departments
+            Find People <span className="text-[#2fb8ff]">•</span> Build Connections · {INTERESTS.length} scenes
           </motion.p>
           <h1 className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-[#f4f4f0] sm:text-6xl lg:text-7xl">
             <MaskLines
@@ -76,7 +76,7 @@ export function Hero() {
                 "Find your",
                 "people by",
                 <>
-                  what they <span className="text-[#d7ff3a]">love.</span>
+                  what they <span className="text-[#2fb8ff]">love.</span>
                 </>,
               ]}
             />
@@ -94,10 +94,10 @@ export function Hero() {
               <Link
                 to="/register"
                 data-testid="hero-register-cta"
-                className="group inline-flex items-center gap-3 rounded-full bg-[#d7ff3a] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.03] active:scale-95"
+                className="group inline-flex items-center gap-3 rounded-full bg-[#2fb8ff] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.03] active:scale-95"
               >
                 Start registration
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#d7ff3a] transition-transform duration-500 group-hover:rotate-[-45deg]">
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#2fb8ff] transition-transform duration-500 group-hover:rotate-[-45deg]">
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </Link>
@@ -128,8 +128,12 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.4, duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
         >
-          <motion.div style={{ rotateX: rotX, rotateY: rotY, scale: orbitScale, transformPerspective: 1200 }} className="[transform-style:preserve-3d]">
+          <motion.div style={{ rotateX: rotX, rotateY: rotY, scale: orbitScale, transformPerspective: 1200 }} className="relative [transform-style:preserve-3d]">
             <Orbit />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d]" data-testid="hero-logo-hub">
+              <div className="absolute inset-0 -m-10 rounded-full bg-[#2fb8ff]/25 blur-3xl" />
+              <img src="/logo-mark.png" alt="ConnectMe" className="logo-float relative h-24 w-24 drop-shadow-[0_0_30px_rgba(47,184,255,0.6)] sm:h-32 sm:w-32 lg:h-44 lg:w-44" />
+            </div>
           </motion.div>
         </motion.div>
       </div>

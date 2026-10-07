@@ -33,7 +33,7 @@ export function StepInterests({ value, onChange }: Props) {
                 data-testid={`reg-step2-interest-card-${it.id}`}
                 className={cn(
                   "group relative block aspect-[3/4] w-full overflow-hidden rounded-3xl text-left ring-2 transition-[box-shadow] duration-300",
-                  on ? "ring-[#d7ff3a] shadow-[0_20px_60px_-20px_rgba(215,255,58,0.6)]" : "ring-white/10"
+                  on ? "ring-[#2fb8ff] shadow-[0_20px_60px_-20px_rgba(47,184,255,0.6)]" : "ring-white/10"
                 )}
               >
                 <img
@@ -43,20 +43,20 @@ export function StepInterests({ value, onChange }: Props) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
                 {it.trending && (
-                  <span className="absolute left-3 top-3 rounded-full bg-[#d7ff3a] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#07080c]" data-testid={`reg-step2-trending-${it.id}`}>
+                  <span className="absolute left-3 top-3 rounded-full bg-[#2fb8ff] px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-[#07080c]" data-testid={`reg-step2-trending-${it.id}`}>
                     Trending
                   </span>
                 )}
                 <span
                   className={cn(
                     "absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full border transition-colors",
-                    on ? "border-[#d7ff3a] bg-[#d7ff3a] text-[#07080c]" : "border-white/40 bg-black/30 text-transparent"
+                    on ? "border-[#2fb8ff] bg-[#2fb8ff] text-[#07080c]" : "border-white/40 bg-black/30 text-transparent"
                   )}
                 >
                   <Check className="h-4 w-4" />
                 </span>
                 <span className="absolute inset-x-0 bottom-0 p-4">
-                  <Icon className="mb-2 h-5 w-5 text-[#d7ff3a]" />
+                  <Icon className="mb-2 h-5 w-5 text-[#2fb8ff]" />
                   <span className="block font-display text-lg font-semibold uppercase text-white">{it.label}</span>
                   <span className="mt-1 block text-xs text-zinc-300">{it.tagline}</span>
                 </span>

@@ -17,7 +17,7 @@ function Tile({ children, className, delay = 0, testId }: { children: ReactNode;
 function StepChip({ n, label, done }: { n: number; label: string; done?: boolean }) {
   return (
     <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3">
-      <span className={cn("grid h-7 w-7 place-items-center rounded-full font-mono text-xs", done ? "bg-[#d7ff3a] text-[#07080c]" : "border border-white/20 text-zinc-300")}>
+      <span className={cn("grid h-7 w-7 place-items-center rounded-full font-mono text-xs", done ? "bg-[#2fb8ff] text-[#07080c]" : "border border-white/20 text-zinc-300")}>
         {done ? <Check className="h-3.5 w-3.5" /> : n}
       </span>
       <span className="text-sm text-zinc-200">{label}</span>
@@ -56,12 +56,12 @@ export function HowItWorks() {
       <Reveal className="mb-12 max-w-2xl">
         <p className="eyebrow mb-5">02 — How it works</p>
         <h2 className="font-display text-3xl font-semibold uppercase leading-[1.02] tracking-tight text-[#f4f4f0] sm:text-5xl">
-          Four steps. <span className="text-[#d7ff3a]">Zero</span> creepiness.
+          Four steps. <span className="text-[#2fb8ff]">Zero</span> creepiness.
         </h2>
       </Reveal>
       <div className="grid auto-rows-[minmax(280px,auto)] grid-cols-1 gap-4 md:grid-cols-6">
         <Tile testId="bento-register" className="md:col-span-4">
-          <UserRound className="h-6 w-6 text-[#d7ff3a]" />
+          <UserRound className="h-6 w-6 text-[#2fb8ff]" />
           <h3 className="mt-6 font-display text-xl font-semibold uppercase text-white">Register in a minute</h3>
           <p className="mt-3 max-w-md text-sm text-zinc-300">Name and phone number, your scenes, your department. That's the whole form.</p>
           <div className="mt-auto grid gap-2 pt-8 sm:grid-cols-2">

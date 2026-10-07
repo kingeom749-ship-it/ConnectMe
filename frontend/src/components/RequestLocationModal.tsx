@@ -42,7 +42,7 @@ export function RequestLocationModal({ target, onClose }: Props) {
           <p className="eyebrow">Register first</p>
           <h2 className="mt-3 font-display text-2xl font-semibold uppercase text-white">Who's asking?</h2>
           <p className="mt-3 text-sm text-zinc-300">Requests always show your name, so {target?.name} knows exactly who is asking. Create a profile to continue.</p>
-          <Link to="/register" onClick={onClose} data-testid="location-request-register-link" className="mt-6 inline-flex rounded-full bg-[#d7ff3a] px-6 py-3 font-semibold text-[#07080c]">
+          <Link to="/register" onClick={onClose} data-testid="location-request-register-link" className="mt-6 inline-flex rounded-full bg-[#2fb8ff] px-6 py-3 font-semibold text-[#07080c]">
             Start registration
           </Link>
         </div>
@@ -65,7 +65,7 @@ export function RequestLocationModal({ target, onClose }: Props) {
             rows={3}
             placeholder="Hey! Meeting for practice near the auditorium?"
             data-testid="location-request-note-input"
-            className="mt-2 w-full resize-none rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-white placeholder:text-zinc-500 focus:border-[#d7ff3a] focus:outline-none"
+            className="mt-2 w-full resize-none rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-white placeholder:text-zinc-500 focus:border-[#2fb8ff] focus:outline-none"
           />
           <p className="mt-1 text-right font-mono text-[11px] text-zinc-400">{note.length}/140</p>
           <p className="mt-2 text-sm text-zinc-400">Sending as <span className="text-white">{active.name}</span></p>
@@ -73,7 +73,7 @@ export function RequestLocationModal({ target, onClose }: Props) {
             onClick={send}
             disabled={sending}
             data-testid="location-request-modal-confirm-btn"
-            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#d7ff3a] py-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.02] disabled:opacity-50"
+            className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[#2fb8ff] py-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.02] disabled:opacity-50"
           >
             {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />} Send request
           </button>

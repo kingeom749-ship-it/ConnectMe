@@ -8,6 +8,7 @@ import Landing from "./pages/Landing";
 import Register from "./pages/Register";
 import Directory from "./pages/Directory";
 import Requests from "./pages/Requests";
+import Messages from "./pages/Messages";
 
 export default function App() {
   return (
@@ -21,6 +22,8 @@ export default function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/directory" element={<Directory />} />
             <Route path="/requests" element={<Requests />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/messages/:personId" element={<Messages />} />
             <Route path="*" element={<Landing />} />
           </Routes>
           <Toaster theme="dark" position="bottom-center" richColors />

@@ -55,7 +55,7 @@ export function ProfileMenu() {
               >
                 <Avatar name={p.name} seed={p.id} className="h-8 w-8 rounded-full text-[10px]" />
                 <span className="flex-1 truncate">{p.name}</span>
-                {p.id === active.id && <Check className="h-4 w-4 text-[#d7ff3a]" />}
+                {p.id === active.id && <Check className="h-4 w-4 text-[#2fb8ff]" />}
               </button>
             ))}
             <div className="my-2 h-px bg-white/10" />
