@@ -25,8 +25,13 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 - Phone OTP verification before registration (/api/otp/send, /api/otp/verify; registration requires verification_token). Twilio Verify used automatically when TWILIO_* env vars are set; otherwise DEMO mode returns code to UI (MOCKED SMS). 30s resend gap, 5 attempts, 10-min code TTL. 10-digit numbers default to +91.
 - Meet-up pins: on a shared request either party taps a Leaflet map (OSM tiles, dark filter) to drop a named pin; other party accepts/declines; confirmed spot shows Directions link. Endpoints /api/location-requests/{id}/meetup and /meetup/respond; cleared on revoke/cancel.
 
+## Implemented (2026-10-07, iteration 3)
+- Meet-up countdown: accepting a spot stamps `accepted_at` + `meet_at` (15-min window) on the meetup. `MeetupCountdown.tsx` shows a walking-ETA nudge ("You're about N min away on foot" for the sharer; "{other} is about N min from the spot" for the requester, with an optional device-only "Check my distance" geolocation that is never sent to the server), a live mm:ss timer with progress bar and an "It's time" state.
+- `/api/meta` exposes `otp_mode` ("sms" | "demo"); PhoneVerify shows whether codes arrive by SMS or on screen.
+- Tests: /app/backend/tests/test_meetup_countdown.py
+
 ## Backlog
-- P1: Connect real Twilio Verify keys (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE in backend/.env) — currently DEMO mode shows code on screen
+- P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
 - P1: Contact action (call/WhatsApp) after mutual consent
 - P2: Profile editing, avatar upload, notifications
 

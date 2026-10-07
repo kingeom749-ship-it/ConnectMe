@@ -47,6 +47,8 @@ export interface Meetup {
   status: "proposed" | "accepted" | "declined";
   proposed_by_me: boolean;
   proposed_at: string;
+  accepted_at: string | null;
+  meet_at: string | null;
 }
 
 export interface OtpSent {
@@ -59,6 +61,7 @@ export interface Meta {
   total: number;
   interests: Partial<Record<InterestId, number>>;
   departments: Partial<Record<Department, number>>;
+  otp_mode: "sms" | "demo";
 }
 
 export interface Inbox {

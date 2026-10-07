@@ -3,6 +3,7 @@ import { BadgeCheck, FlaskConical, KeyRound, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../../lib/api";
 import type { OtpSent } from "../../lib/api";
+import { useMeta } from "../../lib/queries";
 
 interface Props {
   phone: string;
@@ -14,6 +15,7 @@ const btn =
   "inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition-[transform,opacity] hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-40";
 
 export function PhoneVerify({ phone, verified, onVerified }: Props) {
+  const meta = useMeta();
   const [sent, setSent] = useState<OtpSent | null>(null);
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
@@ -106,7 +108,11 @@ export function PhoneVerify({ phone, verified, onVerified }: Props) {
           {busy && !sent && <Loader2 className="h-4 w-4 animate-spin" />}
           {sent ? (cooldown > 0 ? `Resend code in ${cooldown}s` : "Resend code") : "Send verification code"}
         </button>
-        {!sent && <span className="text-xs text-zinc-400">10-digit numbers default to +91.</span>}
+        {!sent && (
+          <span className="text-xs text-zinc-400" data-testid="reg-otp-mode-hint">
+            10-digit numbers default to +91.{meta && (meta.otp_mode === "sms" ? " Code arrives by SMS." : " Demo mode: code is shown on screen.")}
+          </span>
+        )}
       </div>
       {error && (
         <p className="text-sm text-rose-300" role="alert" data-testid="reg-otp-error">

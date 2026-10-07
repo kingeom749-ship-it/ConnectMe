@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone, timedelta
-from otp import build_otp_router, consume_verification, normalize_phone
+from otp import build_otp_router, consume_verification, normalize_phone, twilio_config
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -126,6 +126,11 @@ class Meetup(BaseModel):
     status: str
     proposed_by_me: bool
     proposed_at: str
+    accepted_at: Optional[str] = None
+    meet_at: Optional[str] = None
+
+
+MEETUP_WINDOW = timedelta(minutes=15)
 
 
 class LocationRequestOut(BaseModel):
@@ -187,7 +192,8 @@ async def serialize_request(doc: dict, viewer_id: str) -> LocationRequestOut:
         m = doc.get("meetup")
         if m:
             meetup = Meetup(lat=m["lat"], lng=m["lng"], label=m["label"], status=m["status"],
-                            proposed_by_me=m["proposed_by"] == viewer_id, proposed_at=m["proposed_at"])
+                            proposed_by_me=m["proposed_by"] == viewer_id, proposed_at=m["proposed_at"],
+                            accepted_at=m.get("accepted_at"), meet_at=m.get("meet_at"))
     return LocationRequestOut(
         id=doc["id"], status=status, note=doc.get("note", ""), created_at=doc["created_at"],
         responded_at=doc.get("responded_at"), counterpart=Person.from_mongo(other) if other else None,
@@ -207,6 +213,7 @@ async def meta():
         "total": len(people),
         "interests": {i: sum(i in p.get("interests", []) for p in people) for i in INTERESTS},
         "departments": {d: sum(p.get("department") == d for p in people) for d in DEPARTMENTS},
+        "otp_mode": "sms" if twilio_config() else "demo",
     }
 
 
@@ -359,6 +366,9 @@ async def respond_meetup(request_id: str, body: MeetupRespond, x_person_token: O
     if meetup["proposed_by"] == person["id"]:
         raise HTTPException(403, "The other person needs to answer your suggestion")
     meetup = {**meetup, "status": "accepted" if body.accept else "declined"}
+    if body.accept:
+        t = now()
+        meetup.update(accepted_at=t.isoformat(), meet_at=(t + MEETUP_WINDOW).isoformat())
     await db.location_requests.update_one({"id": request_id}, {"$set": {"meetup": meetup}})
     return await serialize_request({**doc, "meetup": meetup}, person["id"])
 

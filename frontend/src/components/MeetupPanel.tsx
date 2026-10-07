@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Check, ExternalLink, Flag, Loader2, MapPinned, X } from "lucide-react";
 import { toast } from "sonner";
 import { MeetupMap } from "./MeetupMap";
+import { MeetupCountdown } from "./MeetupCountdown";
 import { api } from "../lib/api";
 import type { LocationRequest, SharedLocation } from "../lib/api";
 import { useSession } from "../lib/session";
@@ -10,11 +11,12 @@ import { useRefresh } from "../lib/queries";
 interface Props {
   request: LocationRequest;
   loc: SharedLocation;
+  isSharer: boolean;
 }
 
 const pill = "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-transform hover:scale-[1.03] disabled:opacity-50";
 
-export function MeetupPanel({ request: r, loc }: Props) {
+export function MeetupPanel({ request: r, loc, isSharer }: Props) {
   const { active } = useSession();
   const refresh = useRefresh();
   const [picking, setPicking] = useState(false);
@@ -80,10 +82,13 @@ export function MeetupPanel({ request: r, loc }: Props) {
             {!draft && <p className="text-xs text-zinc-400">Drop a pin first, then name it.</p>}
           </div>
         ) : (
-          <MeetupStatus request={r} other={other} busy={busy}
-            onSuggest={() => setPicking(true)}
-            onAnswer={(accept) => run(() => api.respondMeetup(token, r.id, accept), accept ? "Meet-up spot confirmed" : "Spot declined")}
-          />
+          <>
+            <MeetupStatus request={r} other={other} busy={busy}
+              onSuggest={() => setPicking(true)}
+              onAnswer={(accept) => run(() => api.respondMeetup(token, r.id, accept), accept ? "Meet-up spot confirmed" : "Spot declined")}
+            />
+            {m?.status === "accepted" && <MeetupCountdown meetup={m} loc={loc} isSharer={isSharer} other={other} />}
+          </>
         )}
       </div>
     </div>

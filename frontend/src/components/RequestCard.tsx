@@ -85,7 +85,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
           </button>
         </div>
       )}
-      {direction === "incoming" && r.status === "shared" && r.location && <MeetupPanel request={r} loc={r.location} />}
+      {direction === "incoming" && r.status === "shared" && r.location && <MeetupPanel request={r} loc={r.location} isSharer />}
 
       {direction === "outgoing" && r.status === "pending" && (
         <div className="mt-5 flex items-center justify-between gap-3">
@@ -99,7 +99,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
       {direction === "outgoing" && r.status === "shared" && r.location && (
         <>
           <p className="mt-4 flex items-center gap-2 text-sm text-[#34d399]"><MapPin className="h-4 w-4" /> Shared with you until {time(r.location.expires_at)}</p>
-          <MeetupPanel request={r} loc={r.location} />
+          <MeetupPanel request={r} loc={r.location} isSharer={false} />
         </>
       )}
     </article>
