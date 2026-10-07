@@ -36,6 +36,10 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 ## Implemented (2026-10-07, iteration 5)
 - 7 trending-2026 interests added (12 total): ai-building "AI & Vibe Coding", content-creation, run-club, pickleball "Pickleball & Padel", anime "Anime & Cosplay", photography "Photography & Film", music-production. `Interest.trending` flag drives "Trending 2026" tags on landing + registration cards. Hero orbit shows 8 cards (trending first) with dynamic angles; registration grid is now 2/3/4 columns; marquee derives from data. Backend INTERESTS validation + /api/meta counts updated; 9 new demo members seeded idempotently (seed now upserts per demo phone).
 
+## Implemented (2026-10-07, iteration 6)
+- Brand refresh: user-supplied blue logo (public/logo-mark.png cropped w/ alpha, logo-full.png). Accent switched globally from lime #d7ff3a → electric blue #2fb8ff (CSS var --accent); Wordmark uses the mark + gradient "Me" + optional tagline "Find People • Build Connections" (footer); hero orbit has a floating logo hub in the centre; favicon = logo-mark.png.
+- Private 1:1 messaging: backend `/app/backend/messages.py` (collection `messages`: id, pair (sorted ids), participants, sender_id, recipient_id, text, created_at, read_at). Endpoints GET /api/conversations (last msg + unread), GET /api/conversations/unread, GET /api/conversations/{other_id} (marks read), POST /api/conversations/{other_id}. Threads are only queryable by the two participants; demo members auto-reply. Frontend /messages and /messages/:personId (sidebar + thread, polling 3s/5s/8s), nav "Messages" link w/ unread badge, "Message privately" on member cards and request cards, read receipts (✓/✓✓), mobile back nav. Tests: backend/tests/test_messages.py; frontend verified by testing agent (test_reports/iteration_1.json).
+
 ## Backlog
 - P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
 - P2: Profile editing, avatar upload, notifications
