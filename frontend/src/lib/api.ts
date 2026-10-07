@@ -37,6 +37,7 @@ export interface LocationRequest {
   counterpart: Person | null;
   location: SharedLocation | null;
   meetup: Meetup | null;
+  contact_phone: string | null;
   is_demo: boolean;
 }
 

@@ -30,9 +30,11 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 - `/api/meta` exposes `otp_mode` ("sms" | "demo"); PhoneVerify shows whether codes arrive by SMS or on screen.
 - Tests: /app/backend/tests/test_meetup_countdown.py
 
+## Implemented (2026-10-07, iteration 4)
+- Contact reveal: once a meet-up spot is accepted by both parties, `LocationRequestOut.contact_phone` carries the counterpart's full number (null otherwise — phone stays masked until mutual confirmation). `ContactReveal.tsx` shows the number with Call (`tel:`) and WhatsApp (`wa.me` prefilled message) buttons under the countdown.
+
 ## Backlog
 - P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
-- P1: Contact action (call/WhatsApp) after mutual consent
 - P2: Profile editing, avatar upload, notifications
 
 ## Next tasks

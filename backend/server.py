@@ -142,6 +142,7 @@ class LocationRequestOut(BaseModel):
     counterpart: Optional[Person] = None
     location: Optional[SharedLocation] = None
     meetup: Optional[Meetup] = None
+    contact_phone: Optional[str] = None
     is_demo: bool = False
 
 
@@ -186,7 +187,7 @@ async def serialize_request(doc: dict, viewer_id: str) -> LocationRequestOut:
     other_id = doc["target_id"] if doc["requester_id"] == viewer_id else doc["requester_id"]
     other = await db.people.find_one({"id": other_id}, PUBLIC_FIELDS)
     status = effective_status(doc)
-    location = meetup = None
+    location = meetup = contact_phone = None
     if status == "shared" and doc.get("location"):
         location = SharedLocation(**doc["location"], shared_at=doc["responded_at"], expires_at=doc["expires_at"])
         m = doc.get("meetup")
@@ -194,10 +195,12 @@ async def serialize_request(doc: dict, viewer_id: str) -> LocationRequestOut:
             meetup = Meetup(lat=m["lat"], lng=m["lng"], label=m["label"], status=m["status"],
                             proposed_by_me=m["proposed_by"] == viewer_id, proposed_at=m["proposed_at"],
                             accepted_at=m.get("accepted_at"), meet_at=m.get("meet_at"))
+            if m["status"] == "accepted" and other:
+                contact_phone = other.get("phone")
     return LocationRequestOut(
         id=doc["id"], status=status, note=doc.get("note", ""), created_at=doc["created_at"],
         responded_at=doc.get("responded_at"), counterpart=Person.from_mongo(other) if other else None,
-        location=location, meetup=meetup, is_demo=doc.get("is_demo", False),
+        location=location, meetup=meetup, contact_phone=contact_phone, is_demo=doc.get("is_demo", False),
     )
 
 

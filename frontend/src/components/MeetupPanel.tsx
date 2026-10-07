@@ -3,6 +3,7 @@ import { Check, ExternalLink, Flag, Loader2, MapPinned, X } from "lucide-react";
 import { toast } from "sonner";
 import { MeetupMap } from "./MeetupMap";
 import { MeetupCountdown } from "./MeetupCountdown";
+import { ContactReveal } from "./ContactReveal";
 import { api } from "../lib/api";
 import type { LocationRequest, SharedLocation } from "../lib/api";
 import { useSession } from "../lib/session";
@@ -88,6 +89,7 @@ export function MeetupPanel({ request: r, loc, isSharer }: Props) {
               onAnswer={(accept) => run(() => api.respondMeetup(token, r.id, accept), accept ? "Meet-up spot confirmed" : "Spot declined")}
             />
             {m?.status === "accepted" && <MeetupCountdown meetup={m} loc={loc} isSharer={isSharer} other={other} />}
+            {m?.status === "accepted" && r.contact_phone && <ContactReveal phone={r.contact_phone} other={other} spot={m.label} />}
           </>
         )}
       </div>
