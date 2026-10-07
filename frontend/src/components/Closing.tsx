@@ -13,7 +13,7 @@ export function Manifesto() {
     <section className="mx-auto max-w-6xl px-5 py-24 md:px-8 md:py-36" data-testid="manifesto-section">
       <p className="eyebrow mb-8">04 — Our promise</p>
       <motion.p
-        className="font-display text-2xl font-medium leading-[1.25] tracking-tight text-[#f4f4f0] sm:text-4xl lg:text-5xl"
+        className="font-display text-2xl font-medium leading-[1.25] tracking-tight text-[#f7f2ec] sm:text-4xl lg:text-5xl"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.15 }}
@@ -22,7 +22,7 @@ export function Manifesto() {
         {words.map((w, i) => (
           <motion.span
             key={i}
-            className={`mr-[0.28em] inline-block ${w.startsWith("yes") || w === "never" ? "text-[#2fb8ff]" : ""}`}
+            className={`mr-[0.28em] inline-block ${w.startsWith("yes") || w === "never" ? "text-[#ffb086]" : ""}`}
             variants={{ hidden: { opacity: 0.15, y: 14, filter: "blur(6px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)" } }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
@@ -47,20 +47,20 @@ export function FinalCta() {
       <div ref={ref} className="relative">
         <motion.div style={{ clipPath: clip }} className="relative h-[78vh] min-h-[520px] overflow-hidden rounded-[32px]">
           <motion.img style={{ scale: imgScale }} src="/images/crowd.jpg" alt="Crowd making heart hands at a concert" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#07080c] via-[#07080c]/50 to-[#07080c]/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a12] via-[#0c0a12]/50 to-[#0c0a12]/20" />
           <div className="relative flex h-full flex-col justify-end p-6 md:p-14">
             <h2 className="font-display text-4xl font-bold uppercase leading-[0.95] text-white sm:text-6xl lg:text-7xl">
               Your people
               <br />
-              are <span className="text-[#2fb8ff]">already here.</span>
+              are <span className="text-[#ffb086]">already here.</span>
             </h2>
             <Link
               to="/register"
               data-testid="final-register-cta"
-              className="group mt-8 inline-flex w-fit items-center gap-3 rounded-full bg-[#2fb8ff] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.03]"
+              className="group mt-8 inline-flex w-fit items-center gap-3 rounded-full bg-[#ffb086] py-4 pl-7 pr-4 font-semibold text-[#0c0a12] transition-transform hover:scale-[1.03]"
             >
               Create my profile
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#2fb8ff] transition-transform duration-500 group-hover:rotate-[-45deg]">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#0c0a12] text-[#ffb086] transition-transform duration-500 group-hover:rotate-[-45deg]">
                 <ArrowRight className="h-4 w-4" />
               </span>
             </Link>

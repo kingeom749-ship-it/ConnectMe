@@ -27,7 +27,7 @@ function ClickCatcher({ enabled, onPick }: { enabled: boolean; onPick: Props["on
 export function MeetupMap({ loc, meetup, draft, picking, onPick }: Props) {
   return (
     <div className={`relative z-0 h-64 overflow-hidden sm:h-72 ${picking ? "cursor-crosshair" : ""}`} data-testid="meetup-map">
-      <MapContainer center={[loc.lat, loc.lng]} zoom={14} scrollWheelZoom={false} className="h-full w-full bg-[#0e1016]">
+      <MapContainer center={[loc.lat, loc.lng]} zoom={14} scrollWheelZoom={false} className="h-full w-full bg-[#15111d]">
         <TileLayer
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -42,7 +42,7 @@ export function MeetupMap({ loc, meetup, draft, picking, onPick }: Props) {
         <ClickCatcher enabled={picking} onPick={onPick} />
       </MapContainer>
       {picking && (
-        <span className="pointer-events-none absolute left-1/2 top-3 z-[500] -translate-x-1/2 rounded-full bg-[#07080c]/90 px-4 py-2 text-xs font-medium text-white ring-1 ring-white/15">
+        <span className="pointer-events-none absolute left-1/2 top-3 z-[500] -translate-x-1/2 rounded-full bg-[#0c0a12]/90 px-4 py-2 text-xs font-medium text-white ring-1 ring-white/15">
           Tap the map to drop a pin
         </span>
       )}

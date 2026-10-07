@@ -22,7 +22,7 @@ export function ConversationList({ conversations, activeId, loading }: Props) {
       <div className="rounded-3xl border border-dashed border-white/15 p-8 text-center" data-testid="conversations-empty">
         <MessageSquareDashed className="mx-auto h-8 w-8 text-zinc-500" />
         <p className="mt-3 text-sm text-zinc-300">No chats yet. Open someone in the directory and tap Message.</p>
-        <Link to="/directory" data-testid="conversations-browse-link" className="mt-3 inline-block text-sm text-[#2fb8ff] hover:underline">Browse the directory →</Link>
+        <Link to="/directory" data-testid="conversations-browse-link" className="mt-3 inline-block text-sm text-[#ffb086] hover:underline">Browse the directory →</Link>
       </div>
     );
   }
@@ -37,10 +37,10 @@ export function ConversationList({ conversations, activeId, loading }: Props) {
               data-testid={`conversation-item-${c.person.id}`}
               className={cn(
                 "flex items-center gap-3 rounded-2xl border px-3 py-3 transition-colors",
-                on ? "border-[#2fb8ff]/40 bg-[#2fb8ff]/[0.08]" : "border-transparent hover:border-white/10 hover:bg-white/[0.03]"
+                on ? "border-[#ffb086]/40 bg-[#ffb086]/[0.08]" : "border-transparent hover:border-white/10 hover:bg-white/[0.03]"
               )}
             >
-              <Avatar name={c.person.name} seed={c.person.id} />
+              <Avatar name={c.person.name} seed={c.person.id} src={c.person.picture} className="h-10 w-10 rounded-xl text-xs" />
               <span className="min-w-0 flex-1">
                 <span className="flex items-center justify-between gap-2">
                   <span className={cn("truncate text-sm font-semibold", on ? "text-white" : "text-zinc-100")}>{c.person.name}</span>
@@ -51,7 +51,7 @@ export function ConversationList({ conversations, activeId, loading }: Props) {
                     {c.last_message.mine && "You: "}{c.last_message.text}
                   </span>
                   {c.unread > 0 && (
-                    <span data-testid={`conversation-unread-${c.person.id}`} className="grid h-5 min-w-5 shrink-0 place-items-center rounded-full bg-[#2fb8ff] px-1.5 font-mono text-[10px] font-semibold text-[#07080c]">
+                    <span data-testid={`conversation-unread-${c.person.id}`} className="grid h-5 min-w-5 shrink-0 place-items-center rounded-full bg-[#ffb086] px-1.5 font-mono text-[10px] font-semibold text-[#0c0a12]">
                       {c.unread}
                     </span>
                   )}

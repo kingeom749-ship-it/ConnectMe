@@ -12,7 +12,7 @@ export function DepartmentsSection() {
       <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6">
         <div>
           <p className="eyebrow mb-5">03 — Departments</p>
-          <h2 className="font-display text-3xl font-semibold uppercase leading-[1.02] tracking-tight text-[#f4f4f0] sm:text-5xl">
+          <h2 className="font-display text-3xl font-semibold uppercase leading-[1.02] tracking-tight text-[#f7f2ec] sm:text-5xl">
             Same passion,
             <br />
             different <span className="text-outline">desks.</span>
@@ -28,10 +28,10 @@ export function DepartmentsSection() {
                 <Link
                   to={`/directory?department=${encodeURIComponent(d)}`}
                   data-testid={`dept-tile-${slug(d)}`}
-                  className="group flex h-64 flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-[#161922] to-[#0e1016] p-6 transition-colors hover:border-[#2fb8ff]/60"
+                  className="group flex h-64 flex-col justify-between rounded-[28px] border border-white/10 bg-gradient-to-b from-[#1d1826] to-[#15111d] p-6 transition-colors hover:border-[#ffb086]/60"
                 >
                   <div className="flex items-start justify-between">
-                    <Icon className="h-6 w-6 text-[#2fb8ff]" />
+                    <Icon className="h-6 w-6 text-[#ffb086]" />
                     <ArrowUpRight className="h-5 w-5 text-zinc-400 transition-transform duration-500 group-hover:rotate-45 group-hover:text-white" />
                   </div>
                   <div>

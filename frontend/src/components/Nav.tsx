@@ -20,7 +20,7 @@ function PendingBadge() {
   const n = inbox.incoming.filter((r) => r.status === "pending").length;
   if (!n) return null;
   return (
-    <span data-testid="nav-pending-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#2fb8ff] px-1 font-mono text-[11px] font-semibold text-[#07080c]">
+    <span data-testid="nav-pending-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#ffb086] px-1 font-mono text-[11px] font-semibold text-[#0c0a12]">
       {n}
     </span>
   );
@@ -30,7 +30,7 @@ function UnreadBadge() {
   const n = useUnreadCount();
   if (!n) return null;
   return (
-    <span data-testid="nav-unread-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#2fb8ff] px-1 font-mono text-[11px] font-semibold text-[#07080c]">
+    <span data-testid="nav-unread-count" className="ml-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-[#ffb086] px-1 font-mono text-[11px] font-semibold text-[#0c0a12]">
       {n}
     </span>
   );
@@ -77,7 +77,7 @@ export function Nav() {
             <Link
               to="/register"
               data-testid="nav-register-btn"
-              className="rounded-full bg-[#2fb8ff] px-5 py-2.5 text-sm font-semibold text-[#07080c] transition-transform hover:scale-[1.04] active:scale-95"
+              className="rounded-full bg-[#ffb086] px-5 py-2.5 text-sm font-semibold text-[#0c0a12] transition-transform hover:scale-[1.04] active:scale-95"
             >
               Join
             </Link>
@@ -107,7 +107,7 @@ export function Nav() {
                 to={l.to}
                 onClick={() => setOpen(false)}
                 data-testid={`mobile-nav-${l.id}-link`}
-                className="flex items-center justify-between rounded-2xl px-4 py-4 font-display text-2xl uppercase text-[#f4f4f0] hover:bg-white/5"
+                className="flex items-center justify-between rounded-2xl px-4 py-4 font-display text-2xl uppercase text-[#f7f2ec] hover:bg-white/5"
               >
                 <span className="flex items-center">
                   {l.label}
@@ -117,7 +117,7 @@ export function Nav() {
               </Link>
             ))}
             {!active && (
-              <Link to="/register" data-testid="mobile-nav-register-link" className="mt-2 block rounded-2xl bg-[#2fb8ff] px-4 py-4 text-center font-semibold text-[#07080c]">
+              <Link to="/register" data-testid="mobile-nav-register-link" className="mt-2 block rounded-2xl bg-[#ffb086] px-4 py-4 text-center font-semibold text-[#0c0a12]">
                 Start registration
               </Link>
             )}

@@ -24,7 +24,8 @@ export function SmoothScroll() {
   }, []);
 
   useEffect(() => {
-    const target = hash ? document.querySelector(hash) : null;
+    const anchor = /^#[A-Za-z][\w-]*$/.test(hash) ? hash : "";
+    const target = anchor ? document.querySelector(anchor) : null;
     if (target instanceof HTMLElement) {
       if (lenisRef.current) lenisRef.current.scrollTo(target, { offset: -80 });
       else target.scrollIntoView();

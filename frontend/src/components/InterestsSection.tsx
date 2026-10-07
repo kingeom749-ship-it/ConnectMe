@@ -13,7 +13,7 @@ export function InterestsSection() {
     caption: it.tagline,
     meta: (
       <>
-        {it.trending && <span className="mb-1 inline-block rounded-full border border-[#2fb8ff]/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#2fb8ff]" data-testid={`interest-trending-${it.id}`}>Trending 2026</span>}
+        {it.trending && <span className="mb-1 inline-block rounded-full border border-[#ffb086]/50 px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-[#ffb086]" data-testid={`interest-trending-${it.id}`}>Trending 2026</span>}
         <span className="block text-zinc-300">{it.tagline}</span>
         <span className="font-mono text-xs text-zinc-400">{meta?.interests?.[it.id] ?? 0} {meta?.interests?.[it.id] === 1 ? "member" : "members"}</span>
       </>
@@ -25,7 +25,7 @@ export function InterestsSection() {
       <Reveal className="mb-12 grid gap-6 md:mb-16 md:grid-cols-12 md:items-end">
         <div className="md:col-span-7">
           <p className="eyebrow mb-5">01 — Twelve scenes</p>
-          <h2 className="font-display text-3xl font-semibold uppercase leading-[1.02] tracking-tight text-[#f4f4f0] sm:text-5xl">
+          <h2 className="font-display text-3xl font-semibold uppercase leading-[1.02] tracking-tight text-[#f7f2ec] sm:text-5xl">
             Pick a scene.
             <br />
             <span className="text-outline">Meet its people.</span>

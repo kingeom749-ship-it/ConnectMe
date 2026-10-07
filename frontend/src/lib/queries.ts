@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "./api";
-import type { Conversation, Inbox, Meta, Person, Thread } from "./api";
+import type { Block, Conversation, Inbox, Meta, Person, Thread } from "./api";
 import { useSession } from "./session";
 
 const EMPTY_INBOX: Inbox = { incoming: [], outgoing: [] };
@@ -11,7 +11,15 @@ export function useMeta() {
 }
 
 export function usePeople(params: Record<string, string>) {
-  return useQuery<Person[]>({ queryKey: ["people", params], queryFn: () => api.people(params), retry: 1 });
+  const { active } = useSession();
+  const token = active?.token ?? "";
+  return useQuery<Person[]>({ queryKey: ["people", params, token], queryFn: () => api.people(params, token || undefined), retry: 1 });
+}
+
+export function useBlocks() {
+  const { active } = useSession();
+  const token = active?.token ?? "";
+  return useQuery<Block[]>({ queryKey: ["blocks", token], queryFn: () => api.blocks(token), enabled: Boolean(token), retry: 1 });
 }
 
 export function useInbox() {
@@ -73,5 +81,6 @@ export function useRefresh() {
     qc.invalidateQueries({ queryKey: ["conversations"] });
     qc.invalidateQueries({ queryKey: ["unread"] });
     qc.invalidateQueries({ queryKey: ["thread"] });
+    qc.invalidateQueries({ queryKey: ["blocks"] });
   };
 }

@@ -75,10 +75,10 @@ export function MeetupCountdown({ meetup: m, loc, isSharer, other }: Props) {
   };
 
   return (
-    <div className="grid gap-3 rounded-2xl border border-[#2fb8ff]/30 bg-[#2fb8ff]/[0.05] p-4" data-testid="meetup-countdown">
+    <div className="grid gap-3 rounded-2xl border border-[#ffb086]/30 bg-[#ffb086]/[0.05] p-4" data-testid="meetup-countdown">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="flex items-center gap-2 text-sm font-medium text-white" data-testid="meetup-eta-nudge">
-          <Footprints className="h-4 w-4 text-[#2fb8ff]" /> {nudge}
+          <Footprints className="h-4 w-4 text-[#ffb086]" /> {nudge}
         </p>
         {!mine && (
           <button onClick={locate} disabled={locating} data-testid="meetup-check-distance-btn" className="inline-flex items-center gap-2 text-xs text-zinc-300 underline-offset-4 hover:underline disabled:opacity-50">
@@ -93,7 +93,7 @@ export function MeetupCountdown({ meetup: m, loc, isSharer, other }: Props) {
         <div className="grid gap-2">
           <div className="flex items-center justify-between gap-3">
             <span className="flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-zinc-400">
-              {remaining > 0 ? <Timer className="h-3.5 w-3.5" /> : <PartyPopper className="h-3.5 w-3.5 text-[#2fb8ff]" />}
+              {remaining > 0 ? <Timer className="h-3.5 w-3.5" /> : <PartyPopper className="h-3.5 w-3.5 text-[#ffb086]" />}
               {remaining > 0 ? "Meet-up window" : "It's time"}
             </span>
             <span className="font-mono text-2xl font-semibold tabular-nums text-white" data-testid="meetup-timer" aria-live="polite">
@@ -101,7 +101,7 @@ export function MeetupCountdown({ meetup: m, loc, isSharer, other }: Props) {
             </span>
           </div>
           <div className="h-1.5 overflow-hidden rounded-full bg-white/10" aria-hidden>
-            <div className="h-full rounded-full bg-[#2fb8ff] transition-[width] duration-1000 ease-linear" style={{ width: `${Math.min(100, progress * 100)}%` }} />
+            <div className="h-full rounded-full bg-[#ffb086] transition-[width] duration-1000 ease-linear" style={{ width: `${Math.min(100, progress * 100)}%` }} />
           </div>
           <p className="text-xs text-zinc-400" data-testid="meetup-timer-hint">
             {remaining > 0 ? `Aim to be at ${m.label} before the timer runs out.` : `Meet-up time — look for ${other} at ${m.label}.`}

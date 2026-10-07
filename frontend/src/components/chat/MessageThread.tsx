@@ -22,7 +22,7 @@ export function MessageThread({ messages, otherName }: Props) {
   return (
     <div className="flex-1 space-y-2 overflow-y-auto px-4 py-5 sm:px-6" data-testid="message-thread">
       <p className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs text-zinc-400" data-testid="thread-privacy-note">
-        <Lock className="h-3.5 w-3.5 text-[#2fb8ff]" /> Private — only you and {otherName} can see this chat.
+        <Lock className="h-3.5 w-3.5 text-[#ffb086]" /> Private — only you and {otherName} can see this chat.
       </p>
       {messages.length === 0 && (
         <p className="py-10 text-center text-sm text-zinc-500" data-testid="thread-empty">Say hi to {otherName}. Your first message starts the thread.</p>
@@ -39,12 +39,12 @@ export function MessageThread({ messages, otherName }: Props) {
                 className={cn(
                   "max-w-[80%] px-4 py-2.5 text-sm leading-relaxed sm:max-w-[70%]",
                   m.mine
-                    ? "rounded-[20px] rounded-br-md bg-[#2fb8ff] text-[#07080c]"
+                    ? "rounded-[20px] rounded-br-md bg-[#ffb086] text-[#0c0a12]"
                     : "rounded-[20px] rounded-bl-md border border-white/10 bg-white/[0.05] text-zinc-100"
                 )}
               >
                 <p className="whitespace-pre-wrap break-words">{m.text}</p>
-                <p className={cn("mt-1 flex items-center justify-end gap-1 font-mono text-[10px]", m.mine ? "text-[#07080c]/60" : "text-zinc-500")}>
+                <p className={cn("mt-1 flex items-center justify-end gap-1 font-mono text-[10px]", m.mine ? "text-[#0c0a12]/60" : "text-zinc-500")}>
                   {time(m.created_at)}
                   {m.mine && (m.read_at ? <CheckCheck className="h-3 w-3" /> : <Check className="h-3 w-3" />)}
                 </p>

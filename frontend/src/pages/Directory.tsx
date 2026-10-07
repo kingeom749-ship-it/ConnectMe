@@ -5,6 +5,7 @@ import { MaskLines } from "../components/Reveal";
 import { DirectoryFilters } from "../components/DirectoryFilters";
 import { MemberCard } from "../components/MemberCard";
 import { RequestLocationModal } from "../components/RequestLocationModal";
+import { BlockReportModal } from "../components/BlockReportModal";
 import { Footer } from "../components/Closing";
 import { DEPARTMENTS, DEPARTMENT_INFO, INTEREST_MAP } from "../lib/data";
 import type { InterestId } from "../lib/data";
@@ -20,6 +21,7 @@ export default function Directory() {
   const [debounced, setDebounced] = useState(q);
   const [view, setView] = useState<"grid" | "grouped">("grid");
   const [target, setTarget] = useState<Person | null>(null);
+  const [blocking, setBlocking] = useState<Person | null>(null);
   const { active } = useSession();
   const { inbox } = useInbox();
   const closeModal = useCallback(() => setTarget(null), []);
@@ -48,14 +50,14 @@ export default function Directory() {
   }, [inbox.outgoing]);
 
   const card = (p: Person, i: number) => (
-    <MemberCard key={p.id} person={p} index={i} isSelf={p.id === active?.id} requestStatus={statusFor.get(p.id) ?? null} canMessage={Boolean(active)} onRequest={setTarget} />
+    <MemberCard key={p.id} person={p} index={i} isSelf={p.id === active?.id} requestStatus={statusFor.get(p.id) ?? null} canMessage={Boolean(active)} onRequest={setTarget} onBlock={setBlocking} />
   );
 
   const title = interest ? INTEREST_MAP[interest as InterestId]?.label ?? "Directory" : "Directory";
 
   return (
     <main className="relative min-h-screen overflow-x-clip pt-28 md:pt-36" data-testid="directory-page">
-      <div className="pointer-events-none absolute left-0 top-0 h-[480px] w-[480px] rounded-full bg-[#2fb8ff]/[0.06] blur-[140px]" />
+      <div className="pointer-events-none absolute left-0 top-0 h-[480px] w-[480px] rounded-full bg-[#ffb086]/[0.06] blur-[140px]" />
       <div className="relative mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -65,7 +67,7 @@ export default function Directory() {
             </h1>
           </div>
           <p className="flex items-center gap-2 font-mono text-sm text-zinc-300" data-testid="directory-result-count">
-            <Users className="h-4 w-4 text-[#2fb8ff]" /> {people.length} {people.length === 1 ? "person" : "people"}
+            <Users className="h-4 w-4 text-[#ffb086]" /> {people.length} {people.length === 1 ? "person" : "people"}
             {department && ` · ${department}`}
           </p>
         </div>
@@ -115,6 +117,7 @@ export default function Directory() {
       </div>
       <Footer />
       <RequestLocationModal target={target} onClose={closeModal} />
+      <BlockReportModal person={blocking} onClose={() => setBlocking(null)} />
     </main>
   );
 }

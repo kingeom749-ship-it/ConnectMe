@@ -21,10 +21,10 @@ export function ContactReveal({ phone, other, spot }: Props) {
         <p className="text-xs text-zinc-400">Shared with you because you both confirmed the spot.</p>
       </div>
       <div className="flex flex-wrap gap-2">
-        <a href={`tel:${phone}`} data-testid="contact-call-link" className={`${btn} bg-white text-[#07080c]`}>
+        <a href={`tel:${phone}`} data-testid="contact-call-link" className={`${btn} bg-white text-[#0c0a12]`}>
           <Phone className="h-4 w-4" /> Call
         </a>
-        <a href={wa} target="_blank" rel="noreferrer" data-testid="contact-whatsapp-link" className={`${btn} bg-[#25D366] text-[#07080c]`}>
+        <a href={wa} target="_blank" rel="noreferrer" data-testid="contact-whatsapp-link" className={`${btn} bg-[#25D366] text-[#0c0a12]`}>
           <MessageCircle className="h-4 w-4" /> WhatsApp
         </a>
       </div>

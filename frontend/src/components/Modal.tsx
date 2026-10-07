@@ -50,7 +50,7 @@ export function Modal({ open, onClose, title, children, testId }: ModalProps) {
             exit={{ y: 40, opacity: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 26 }}
             style={{ transformPerspective: 1000 }}
-            className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-white/10 bg-[#0e1016] p-6 sm:rounded-3xl sm:p-8"
+            className="relative max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-white/10 bg-[#15111d] p-6 sm:rounded-3xl sm:p-8"
           >
             <button
               onClick={onClose}

@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { Link } from "react-router-dom";
-import { Check, Clock, MapPin, MapPinOff, MessageCircle, Phone } from "lucide-react";
+import { Ban, Check, Clock, MapPin, MapPinOff, MessageCircle, Phone } from "lucide-react";
 import { Avatar } from "./Avatar";
 import { TiltCard } from "./TiltCard";
 import { INTEREST_MAP } from "../lib/data";
@@ -14,9 +14,10 @@ interface Props {
   requestStatus: RequestStatus | null;
   canMessage: boolean;
   onRequest: (p: Person) => void;
+  onBlock: (p: Person) => void;
 }
 
-function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index" | "canMessage">) {
+function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index" | "canMessage" | "onBlock">) {
   const base = "mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-[background-color,transform,color] duration-300";
   if (isSelf) return <span className={cn(base, "border border-white/10 text-zinc-400")}>This is you</span>;
   if (!person.accepts_location_requests)
@@ -27,7 +28,7 @@ function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props,
     );
   if (requestStatus === "pending")
     return (
-      <span className={cn(base, "border border-[#2fb8ff]/40 text-[#2fb8ff]")} data-testid="member-card-request-pending">
+      <span className={cn(base, "border border-[#ffb086]/40 text-[#ffb086]")} data-testid="member-card-request-pending">
         <Clock className="h-4 w-4" /> Request pending
       </span>
     );
@@ -38,7 +39,7 @@ function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props,
       </span>
     );
   return (
-    <button onClick={() => onRequest(person)} data-testid="member-card-request-location-btn" className={cn(base, "bg-white text-[#07080c] hover:scale-[1.02] hover:bg-[#2fb8ff]")}>
+    <button onClick={() => onRequest(person)} data-testid="member-card-request-location-btn" className={cn(base, "bg-white text-[#0c0a12] hover:scale-[1.02] hover:bg-[#ffb086]")}>
       <MapPin className="h-4 w-4" /> Request location
     </button>
   );
@@ -54,9 +55,9 @@ export function MemberCard(props: Props) {
       transition={{ duration: 0.5, delay: Math.min(index, 8) * 0.04, ease: [0.22, 1, 0.36, 1] }}
     >
       <TiltCard max={5} className="h-full">
-        <article data-testid={`member-card-${person.id}`} className="flex h-full flex-col rounded-[28px] border border-white/10 bg-[#0e1016] p-5 transition-colors hover:border-white/25 sm:p-6">
+        <article data-testid={`member-card-${person.id}`} className="flex h-full flex-col rounded-[28px] border border-white/10 bg-[#15111d] p-5 transition-colors hover:border-white/25 sm:p-6">
           <div className="flex items-start gap-4">
-            <Avatar name={person.name} seed={person.id} />
+            <Avatar name={person.name} seed={person.id} src={person.picture} />
             <div className="min-w-0 flex-1">
               <h3 className="truncate font-semibold text-white">{person.name}</h3>
               <p className="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-400">
@@ -72,7 +73,7 @@ export function MemberCard(props: Props) {
               const Icon = it.icon;
               return (
                 <span key={i} className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs text-zinc-200">
-                  <Icon className="h-3.5 w-3.5 text-[#2fb8ff]" /> {it.label}
+                  <Icon className="h-3.5 w-3.5 text-[#ffb086]" /> {it.label}
                 </span>
               );
             })}
@@ -81,13 +82,20 @@ export function MemberCard(props: Props) {
           <div className="mt-auto">
             <RequestButton {...props} />
             {!props.isSelf && (
-              <Link
-                to={props.canMessage ? `/messages/${person.id}` : "/register"}
-                data-testid="member-card-message-btn"
-                className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-white/10 py-3 text-sm font-medium text-zinc-100 transition-colors hover:border-[#2fb8ff]/60 hover:bg-[#2fb8ff]/10 hover:text-white"
-              >
-                <MessageCircle className="h-4 w-4 text-[#2fb8ff]" /> Message privately
-              </Link>
+              <div className="mt-2 flex gap-2">
+                <Link
+                  to={props.canMessage ? `/messages/${person.id}` : "/register"}
+                  data-testid="member-card-message-btn"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/10 py-3 text-sm font-medium text-zinc-100 transition-colors hover:border-[#ffb086]/60 hover:bg-[#ffb086]/10 hover:text-white"
+                >
+                  <MessageCircle className="h-4 w-4 text-[#ffb086]" /> Message privately
+                </Link>
+                {props.canMessage && (
+                  <button onClick={() => props.onBlock(person)} aria-label={`Block ${person.name}`} data-testid="member-card-block-btn" className="grid w-12 shrink-0 place-items-center rounded-full border border-white/10 text-zinc-400 transition-colors hover:border-rose-300/60 hover:text-rose-300">
+                    <Ban className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
             )}
           </div>
         </article>

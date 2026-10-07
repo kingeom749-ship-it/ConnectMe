@@ -13,19 +13,19 @@ export function Marquee() {
             className={
               i % 2
                 ? "text-outline px-6 font-display text-5xl font-semibold uppercase md:px-10 md:text-8xl"
-                : "px-6 font-display text-5xl font-semibold uppercase text-[#f4f4f0] md:px-10 md:text-8xl"
+                : "px-6 font-display text-5xl font-semibold uppercase text-[#f7f2ec] md:px-10 md:text-8xl"
             }
           >
             {w}
           </span>
-          <Asterisk className="h-8 w-8 shrink-0 text-[#2fb8ff] md:h-12 md:w-12" />
+          <Asterisk className="h-8 w-8 shrink-0 text-[#ffb086] md:h-12 md:w-12" />
         </Fragment>
       ))}
     </div>
   );
 
   return (
-    <section data-testid="editorial-marquee" className="relative overflow-hidden border-y border-white/10 bg-[#0e1016] py-8 md:py-12">
+    <section data-testid="editorial-marquee" className="relative overflow-hidden border-y border-white/10 bg-[#15111d] py-8 md:py-12">
       <div className="marquee-track flex w-max">
         {row(0)}
         {row(1)}

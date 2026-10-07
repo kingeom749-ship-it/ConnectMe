@@ -7,6 +7,7 @@ export interface Person {
   id: string;
   name: string;
   phone_masked: string;
+  picture: string;
   interests: InterestId[];
   department: Department;
   accepts_location_requests: boolean;
@@ -76,6 +77,14 @@ export interface Conversation {
 export interface Thread {
   person: Person;
   messages: Message[];
+  blocked_by_me: boolean;
+  blocked_me: boolean;
+}
+
+export interface Block {
+  person: Person;
+  reason: string;
+  created_at: string;
 }
 
 export interface Meta {
@@ -94,7 +103,19 @@ interface Opts {
   method?: string;
   body?: unknown;
   token?: string;
+  credentials?: RequestCredentials;
 }
+
+export interface GoogleIdentity {
+  email: string;
+  name: string;
+  picture: string;
+  session_token: string;
+}
+
+export type GoogleSessionResult =
+  | { status: "signed_in"; person: Me; token: string }
+  | ({ status: "needs_registration" } & GoogleIdentity);
 
 async function req<T>(path: string, opts: Opts = {}): Promise<T> {
   if (!API) throw new Error("Backend is not configured");
@@ -103,6 +124,7 @@ async function req<T>(path: string, opts: Opts = {}): Promise<T> {
   const res = await fetch(`${API}${path}`, {
     method: opts.method ?? "GET",
     headers,
+    credentials: opts.credentials,
     body: opts.body === undefined ? undefined : JSON.stringify(opts.body),
   });
   const data = await res.json().catch(() => null);
@@ -121,14 +143,15 @@ export interface RegisterInput {
   department: Department;
   accepts_location_requests: boolean;
   verification_token: string;
+  google_session_token?: string;
 }
 
 export const api = {
   meta: () => req<Meta>("/meta"),
-  people: (params: Record<string, string>) => {
+  people: (params: Record<string, string>, token?: string) => {
     const s = new URLSearchParams();
     Object.entries(params).forEach(([k, v]) => v && s.set(k, v));
-    return req<Person[]>(`/people?${s.toString()}`);
+    return req<Person[]>(`/people?${s.toString()}`, { token });
   },
   register: (body: RegisterInput) => req<{ person: Me; token: string }>("/people", { method: "POST", body }),
   inbox: (token: string) => req<Inbox>("/location-requests", { token }),
@@ -150,4 +173,12 @@ export const api = {
   thread: (token: string, otherId: string) => req<Thread>(`/conversations/${otherId}`, { token }),
   sendMessage: (token: string, otherId: string, text: string) =>
     req<Message[]>(`/conversations/${otherId}`, { method: "POST", token, body: { text } }),
+  googleSession: (session_id: string) =>
+    req<GoogleSessionResult>("/auth/google/session", { method: "POST", body: { session_id }, credentials: "include" }),
+  authMe: () => req<{ person: Me; token: string }>("/auth/me", { credentials: "include" }),
+  logout: (token: string) => req<{ ok: boolean }>("/auth/logout", { method: "POST", token, credentials: "include" }),
+  blocks: (token: string) => req<Block[]>("/blocks", { token }),
+  block: (token: string, otherId: string, body: { reason: string; report: boolean }) =>
+    req<Block>(`/blocks/${otherId}`, { method: "POST", token, body }),
+  unblock: (token: string, otherId: string) => req<{ ok: boolean }>(`/blocks/${otherId}`, { method: "DELETE", token }),
 };

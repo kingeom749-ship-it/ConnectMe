@@ -71,7 +71,7 @@ export function ShareConsentModal({ request, onClose }: Props) {
           onClick={share}
           disabled={busy}
           data-testid="share-consent-confirm-btn"
-          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#34d399] py-4 font-semibold text-[#07080c] transition-transform hover:scale-[1.02] disabled:opacity-60"
+          className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#34d399] py-4 font-semibold text-[#0c0a12] transition-transform hover:scale-[1.02] disabled:opacity-60"
         >
           {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <LocateFixed className="h-4 w-4" />} Allow & share once
         </button>

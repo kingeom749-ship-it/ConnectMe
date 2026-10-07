@@ -24,17 +24,17 @@ export function StepDepartment({ value, onChange }: Props) {
             data-testid={`reg-step3-dept-option-${slug(d)}`}
             className={cn(
               "group flex items-center gap-4 rounded-3xl border p-4 text-left transition-[background-color,border-color,transform] duration-300 hover:translate-x-1 sm:p-5",
-              on ? "border-[#2fb8ff] bg-[#2fb8ff]/[0.07]" : "border-white/10 bg-white/[0.02] hover:border-white/30"
+              on ? "border-[#ffb086] bg-[#ffb086]/[0.07]" : "border-white/10 bg-white/[0.02] hover:border-white/30"
             )}
           >
-            <span className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-2xl", on ? "bg-[#2fb8ff] text-[#07080c]" : "bg-white/5 text-[#2fb8ff]")}>
+            <span className={cn("grid h-12 w-12 shrink-0 place-items-center rounded-2xl", on ? "bg-[#ffb086] text-[#0c0a12]" : "bg-white/5 text-[#ffb086]")}>
               <Icon className="h-5 w-5" />
             </span>
             <span className="flex-1">
               <span className="block font-display text-xl font-semibold uppercase text-white">{d}</span>
               <span className="text-sm text-zinc-400">{DEPARTMENT_INFO[d].full}</span>
             </span>
-            <span className={cn("grid h-7 w-7 place-items-center rounded-full border", on ? "border-[#2fb8ff] bg-[#2fb8ff] text-[#07080c]" : "border-white/20 text-transparent")}>
+            <span className={cn("grid h-7 w-7 place-items-center rounded-full border", on ? "border-[#ffb086] bg-[#ffb086] text-[#0c0a12]" : "border-white/20 text-transparent")}>
               <Check className="h-4 w-4" />
             </span>
           </button>

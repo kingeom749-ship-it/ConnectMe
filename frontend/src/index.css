@@ -7,20 +7,20 @@
 
 @layer base {
     :root {
-        --ink: #07080c;
-        --ink-2: #0e1016;
-        --ink-3: #161922;
-        --accent: #2fb8ff;
+        --ink: #0c0a12;
+        --ink-2: #15111d;
+        --ink-3: #1d1826;
+        --glow: #ffb086;
         --iris: #8b91ff;
         --signal: #34d399;
-        --bone: #f4f4f0;
-        --background: 228 26% 4%;
+        --bone: #f7f2ec;
+        --background: 255 17% 5%;
         --foreground: 60 14% 95%;
-        --card: 228 22% 7%;
+        --card: 260 18% 9%;
         --card-foreground: 60 14% 95%;
         --popover: 228 22% 7%;
         --popover-foreground: 60 14% 95%;
-        --primary: 73 100% 61%;
+        --primary: 22 100% 76%;
         --primary-foreground: 228 26% 4%;
         --secondary: 228 18% 12%;
         --secondary-foreground: 60 14% 95%;
@@ -51,11 +51,11 @@
         @apply bg-background text-foreground font-sans antialiased;
     }
     ::selection {
-        background: var(--accent);
+        background: var(--glow);
         color: var(--ink);
     }
     :focus-visible {
-        outline: 2px solid var(--accent);
+        outline: 2px solid var(--glow);
         outline-offset: 3px;
     }
 }
@@ -75,7 +75,7 @@
         color: var(--iris);
     }
     .eyebrow {
-        @apply font-mono text-xs uppercase tracking-[0.25em] text-[#2fb8ff];
+        @apply font-mono text-xs uppercase tracking-[0.25em] text-[#ffb086];
     }
     .glass {
         background: rgba(14, 16, 22, 0.66);
@@ -90,10 +90,10 @@
     height: 28px;
     border-radius: 50% 50% 50% 0;
     transform: rotate(-45deg);
-    border: 3px solid #07080c;
+    border: 3px solid #0c0a12;
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
 }
-.cm-pin--accepted { background: #2fb8ff; }
+.cm-pin--accepted { background: #ffb086; }
 .cm-pin--proposed { background: #8b91ff; }
 .cm-pin--declined { background: #71717a; }
 .cm-pin--draft { background: #ffffff; animation: pin-drop 0.45s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -125,8 +125,8 @@
 
 .grid-floor {
     background-image:
-        linear-gradient(rgba(47, 184, 255, 0.22) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(47, 184, 255, 0.22) 1px, transparent 1px);
+        linear-gradient(rgba(255, 176, 134, 0.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 176, 134, 0.22) 1px, transparent 1px);
     background-size: 64px 64px;
     animation: floor 6s linear infinite;
     mask-image: linear-gradient(to top, black 10%, transparent 75%);

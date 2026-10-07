@@ -14,6 +14,8 @@ import uuid
 from datetime import datetime, timezone, timedelta
 from otp import build_otp_router, consume_verification, normalize_phone, twilio_config
 from messages import build_messages_router
+from blocks import build_blocks_router, assert_not_blocked, hidden_ids
+from auth import build_auth_router, link_session, pending_session, session_person
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -52,6 +54,7 @@ class PersonCreate(BaseModel):
     department: str
     accepts_location_requests: bool = False
     verification_token: str = Field(min_length=10)
+    google_session_token: Optional[str] = None
 
     @field_validator("name")
     @classmethod
@@ -89,6 +92,7 @@ class Person(BaseModel):
     id: str
     name: str
     phone_masked: str
+    picture: str = ""
     interests: List[str]
     department: str
     accepts_location_requests: bool
@@ -173,7 +177,7 @@ class RespondBody(BaseModel):
 async def current_person(token: Optional[str]) -> dict:
     if not token:
         raise HTTPException(401, "Register or pick a profile first")
-    doc = await db.people.find_one({"token_hash": hash_token(token)}, {"_id": 0})
+    doc = await db.people.find_one({"token_hash": hash_token(token)}, {"_id": 0}) or await session_person(db, token)
     if not doc:
         raise HTTPException(401, "Profile not found")
     return doc
@@ -226,11 +230,16 @@ async def meta():
 async def register(body: PersonCreate):
     if await db.people.find_one({"phone": body.phone}, {"_id": 1}):
         raise HTTPException(409, "This phone number is already registered")
+    google = await pending_session(db, body.google_session_token)
     await consume_verification(db, body.phone, body.verification_token)
     token = secrets.token_urlsafe(32)
-    doc = {**body.model_dump(exclude={"verification_token"}), "phone_verified": True, "id": str(uuid.uuid4()), "is_demo": False,
-           "created_at": now().isoformat(), "token_hash": hash_token(token)}
+    doc = {**body.model_dump(exclude={"verification_token", "google_session_token"}), "phone_verified": True, "id": str(uuid.uuid4()),
+           "is_demo": False, "created_at": now().isoformat(), "token_hash": hash_token(token)}
+    if google:
+        doc.update(google_email=google["email"], picture=google.get("picture", ""))
     await db.people.insert_one(doc)
+    if google:
+        await link_session(db, body.google_session_token, doc["id"])
     if body.accepts_location_requests:
         demo = await db.people.find_one({"is_demo": True}, {"_id": 0}, sort=[("created_at", 1)])
         if demo:
@@ -243,8 +252,14 @@ async def register(body: PersonCreate):
 
 
 @api_router.get("/people", response_model=List[Person])
-async def list_people(q: str = "", interest: str = "", department: str = ""):
+async def list_people(q: str = "", interest: str = "", department: str = "", x_person_token: Optional[str] = Header(default=None)):
     query: dict = {}
+    if x_person_token:
+        viewer = await db.people.find_one({"token_hash": hash_token(x_person_token)}, {"_id": 0, "id": 1}) or await session_person(db, x_person_token)
+        if viewer:
+            hidden = await hidden_ids(db, viewer["id"])
+            if hidden:
+                query["id"] = {"$nin": list(hidden)}
     if interest:
         query["interests"] = interest.lower()
     if department:
@@ -286,6 +301,7 @@ async def create_request(body: RequestCreate, x_person_token: Optional[str] = He
         raise HTTPException(404, "Person not found")
     if not target.get("accepts_location_requests"):
         raise HTTPException(403, f"{target['name']} isn't accepting location requests")
+    await assert_not_blocked(db, person["id"], target["id"])
     existing = await db.location_requests.find_one(
         {"requester_id": person["id"], "target_id": target["id"], "status": {"$in": ["pending", "shared"]}}, {"_id": 0})
     if existing and effective_status(existing) in ("pending", "shared"):
@@ -410,6 +426,9 @@ async def seed():
     await db.otp_codes.create_index("phone", unique=True)
     await db.messages.create_index([("pair", 1), ("created_at", 1)])
     await db.messages.create_index([("recipient_id", 1), ("read_at", 1)])
+    await db.blocks.create_index([("blocker_id", 1), ("blocked_id", 1)], unique=True)
+    await db.user_sessions.create_index("session_token", unique=True)
+    await db.people.create_index("google_email", unique=True, sparse=True)
     base = now() - timedelta(days=30)
     for i, (name, interests, dept) in enumerate(DEMO_PEOPLE):
         phone = f"+9100000000{i:02d}"
@@ -425,6 +444,8 @@ async def seed():
 app.include_router(api_router)
 app.include_router(build_otp_router(db))
 app.include_router(build_messages_router(db, current_person, Person))
+app.include_router(build_blocks_router(db, current_person, Person))
+app.include_router(build_auth_router(db, Me))
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "motion/react";
-import { ArrowLeft, ArrowRight, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, BadgeCheck, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { StepIdentity } from "../components/register/StepIdentity";
 import { StepInterests } from "../components/register/StepInterests";
 import { StepDepartment } from "../components/register/StepDepartment";
 import { StepConsent } from "../components/register/StepConsent";
 import { RegisterDone } from "../components/register/RegisterDone";
+import { GoogleButton } from "../components/GoogleButton";
 import { api } from "../lib/api";
-import type { Me } from "../lib/api";
+import type { GoogleIdentity, Me } from "../lib/api";
 import type { Department, InterestId } from "../lib/data";
 import { useSession } from "../lib/session";
 import { useRefresh } from "../lib/queries";
@@ -23,8 +24,9 @@ const STEPS = [
 ];
 
 export default function Register() {
+  const google = (useLocation().state as { google?: GoogleIdentity } | null)?.google ?? null;
   const [step, setStep] = useState(0);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(google?.name ?? "");
   const [phone, setPhone] = useState("");
   const [interests, setInterests] = useState<InterestId[]>([]);
   const [department, setDepartment] = useState<Department | null>(null);
@@ -61,8 +63,9 @@ export default function Register() {
         department,
         accepts_location_requests: consent,
         verification_token: verification.token,
+        google_session_token: google?.session_token,
       });
-      addProfile({ id: res.person.id, name: res.person.name, token: res.token });
+      addProfile({ id: res.person.id, name: res.person.name, token: res.token, picture: res.person.picture });
       setCreated(res.person);
       refresh();
     } catch (err) {
@@ -102,7 +105,7 @@ export default function Register() {
             <ol className="mt-8 hidden gap-2 lg:grid" aria-label="Progress">
               {STEPS.map((s, i) => (
                 <li key={s.title} className={cn("flex items-center gap-3 text-sm", i <= step ? "text-white" : "text-zinc-400")}>
-                  <span className={cn("grid h-7 w-7 place-items-center rounded-full font-mono text-xs", i < step ? "bg-[#2fb8ff] text-[#07080c]" : i === step ? "border border-[#2fb8ff] text-[#2fb8ff]" : "border border-white/15")}>
+                  <span className={cn("grid h-7 w-7 place-items-center rounded-full font-mono text-xs", i < step ? "bg-[#ffb086] text-[#0c0a12]" : i === step ? "border border-[#ffb086] text-[#ffb086]" : "border border-white/15")}>
                     {i < step ? <Check className="h-3.5 w-3.5" /> : i + 1}
                   </span>
                   {s.title}
@@ -116,12 +119,27 @@ export default function Register() {
           <div className="mb-8 flex gap-1.5" aria-hidden>
             {STEPS.map((s, i) => (
               <div key={s.title} className="h-1 flex-1 overflow-hidden rounded-full bg-white/10">
-                <motion.div className="h-full bg-[#2fb8ff]" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.6 }} />
+                <motion.div className="h-full bg-[#ffb086]" initial={false} animate={{ width: i <= step ? "100%" : "0%" }} transition={{ duration: 0.6 }} />
               </div>
             ))}
           </div>
 
           <motion.div key={step} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+            {step === 0 && google && (
+              <div className="mb-6 flex items-center gap-3 rounded-2xl border border-[#34d399]/30 bg-[#34d399]/[0.06] px-4 py-3" data-testid="reg-google-linked-banner">
+                {google.picture && <img src={google.picture} alt="" referrerPolicy="no-referrer" className="h-9 w-9 rounded-full" />}
+                <p className="text-sm text-zinc-200">
+                  <span className="flex items-center gap-1.5 font-medium text-[#34d399]"><BadgeCheck className="h-4 w-4" /> Signed in with Google</span>
+                  <span className="font-mono text-xs text-zinc-400">{google.email}</span> — finish your profile below; your phone still needs a one-time code.
+                </p>
+              </div>
+            )}
+            {step === 0 && !google && (
+              <div className="mb-8 flex flex-wrap items-center gap-4" data-testid="reg-google-option">
+                <GoogleButton testId="reg-google-signin-btn" />
+                <span className="text-sm text-zinc-400">Already registered with Google? This signs you straight in. New here? It prefills your name.</span>
+              </div>
+            )}
             {step === 0 && (
               <StepIdentity
                 name={name}
@@ -152,10 +170,10 @@ export default function Register() {
               onClick={next}
               disabled={!canNext || saving}
               data-testid={step === 3 ? "reg-step4-submit-btn" : `reg-step${step + 1}-next-btn`}
-              className="group inline-flex items-center gap-3 rounded-full bg-[#2fb8ff] py-4 pl-7 pr-4 font-semibold text-[#07080c] transition-[transform,opacity] hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-40"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#ffb086] py-4 pl-7 pr-4 font-semibold text-[#0c0a12] transition-[transform,opacity] hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-40"
             >
               {step === 3 ? "Create profile" : "Continue"}
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#07080c] text-[#2fb8ff]">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-[#0c0a12] text-[#ffb086]">
                 {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />}
               </span>
             </button>

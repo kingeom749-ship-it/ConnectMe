@@ -25,7 +25,7 @@ export function Switch({ checked, onChange, label, testId }: SwitchProps) {
       <motion.span
         layout
         transition={{ type: "spring", stiffness: 500, damping: 32 }}
-        className={cn("h-6 w-6 rounded-full shadow", checked ? "ml-7 bg-[#07080c]" : "ml-1 bg-white")}
+        className={cn("h-6 w-6 rounded-full shadow", checked ? "ml-7 bg-[#0c0a12]" : "ml-1 bg-white")}
       />
     </button>
   );

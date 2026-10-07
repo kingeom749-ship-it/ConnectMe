@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { Check, ChevronDown, LogOut, UserPlus } from "lucide-react";
+import { GoogleButton } from "./GoogleButton";
 import { Avatar } from "./Avatar";
 import { useSession } from "../lib/session";
 
@@ -29,7 +30,7 @@ export function ProfileMenu() {
         data-testid="nav-profile-menu-btn"
         className="flex items-center gap-2 rounded-full border border-white/10 py-1 pl-1 pr-3 text-sm text-white transition-colors hover:bg-white/10"
       >
-        <Avatar name={active.name} seed={active.id} className="h-8 w-8 rounded-full text-[10px]" />
+        <Avatar name={active.name} seed={active.id} src={active.picture} className="h-8 w-8 rounded-full text-[10px]" />
         <span className="hidden max-w-[8rem] truncate sm:block">{active.name}</span>
         <ChevronDown className="h-4 w-4 text-zinc-400" />
       </button>
@@ -39,7 +40,7 @@ export function ProfileMenu() {
             initial={{ opacity: 0, y: 8, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.97 }}
-            className="absolute right-0 mt-3 w-72 rounded-3xl border border-white/10 bg-[#0e1016] p-2 shadow-2xl"
+            className="absolute right-0 mt-3 w-72 rounded-3xl border border-white/10 bg-[#15111d] p-2 shadow-2xl"
             data-testid="profile-menu"
           >
             <p className="px-3 pb-2 pt-2 font-mono text-[11px] uppercase tracking-widest text-zinc-400">Profiles on this device</p>
@@ -53,9 +54,9 @@ export function ProfileMenu() {
                 data-testid={`profile-switch-${p.id}`}
                 className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-sm text-white hover:bg-white/5"
               >
-                <Avatar name={p.name} seed={p.id} className="h-8 w-8 rounded-full text-[10px]" />
+                <Avatar name={p.name} seed={p.id} src={p.picture} className="h-8 w-8 rounded-full text-[10px]" />
                 <span className="flex-1 truncate">{p.name}</span>
-                {p.id === active.id && <Check className="h-4 w-4 text-[#2fb8ff]" />}
+                {p.id === active.id && <Check className="h-4 w-4 text-[#ffb086]" />}
               </button>
             ))}
             <div className="my-2 h-px bg-white/10" />
@@ -67,6 +68,9 @@ export function ProfileMenu() {
             >
               <UserPlus className="h-4 w-4" /> Register another person
             </Link>
+            <div className="px-3 py-2">
+              <GoogleButton label="Sign in with Google" className="h-10 w-full text-xs" testId="profile-google-signin-btn" />
+            </div>
             <button
               onClick={() => {
                 forget(active.id);

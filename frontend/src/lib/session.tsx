@@ -1,10 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
+import { api } from "./api";
 
 export interface Profile {
   id: string;
   name: string;
   token: string;
+  picture?: string;
 }
 
 interface SessionValue {
@@ -47,7 +49,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const forget = useCallback((id: string) => {
-    setProfiles((prev) => prev.filter((x) => x.id !== id));
+    setProfiles((prev) => {
+      const gone = prev.find((x) => x.id === id);
+      if (gone) void api.logout(gone.token).catch(() => undefined);
+      return prev.filter((x) => x.id !== id);
+    });
     setActiveId((cur) => (cur === id ? null : cur));
   }, []);
 

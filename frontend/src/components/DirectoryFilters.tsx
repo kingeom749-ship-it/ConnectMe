@@ -16,7 +16,7 @@ interface Props {
 const pill = (on: boolean) =>
   cn(
     "inline-flex shrink-0 items-center gap-2 rounded-full border px-4 py-2.5 text-sm transition-[background-color,border-color,color] duration-300",
-    on ? "border-[#2fb8ff] bg-[#2fb8ff] text-[#07080c]" : "border-white/10 text-zinc-200 hover:border-white/30"
+    on ? "border-[#ffb086] bg-[#ffb086] text-[#0c0a12]" : "border-white/10 text-zinc-200 hover:border-white/30"
   );
 
 export function DirectoryFilters(p: Props) {
@@ -25,13 +25,13 @@ export function DirectoryFilters(p: Props) {
       <div className="flex flex-col gap-3 sm:flex-row">
         <label className="group relative flex-1">
           <span className="sr-only">Search by name or full phone number</span>
-          <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2fb8ff]" />
+          <Search className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#ffb086]" />
           <input
             value={p.q}
             onChange={(e) => p.onQ(e.target.value)}
             placeholder="Search by name or full phone number"
             data-testid="directory-search-input"
-            className="h-14 w-full rounded-full border border-white/10 bg-white/[0.03] pl-14 pr-5 text-white placeholder:text-zinc-500 focus:border-[#2fb8ff] focus:outline-none"
+            className="h-14 w-full rounded-full border border-white/10 bg-white/[0.03] pl-14 pr-5 text-white placeholder:text-zinc-500 focus:border-[#ffb086] focus:outline-none"
           />
         </label>
         <select
@@ -39,7 +39,7 @@ export function DirectoryFilters(p: Props) {
           onChange={(e) => p.onDepartment(e.target.value)}
           aria-label="Filter by department"
           data-testid="directory-department-filter-select"
-          className="h-14 rounded-full border border-white/10 bg-[#0e1016] px-5 text-white focus:border-[#2fb8ff] focus:outline-none"
+          className="h-14 rounded-full border border-white/10 bg-[#15111d] px-5 text-white focus:border-[#ffb086] focus:outline-none"
         >
           <option value="">All departments</option>
           {DEPARTMENTS.map((d) => (
@@ -53,7 +53,7 @@ export function DirectoryFilters(p: Props) {
               onClick={() => p.onView(v)}
               aria-pressed={p.view === v}
               data-testid={`directory-view-${v}-btn`}
-              className={cn("flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 text-sm transition-colors", p.view === v ? "bg-white text-[#07080c]" : "text-zinc-300")}
+              className={cn("flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 text-sm transition-colors", p.view === v ? "bg-white text-[#0c0a12]" : "text-zinc-300")}
             >
               {v === "grid" ? <LayoutGrid className="h-4 w-4" /> : <Rows3 className="h-4 w-4" />}
               {v === "grid" ? "All" : "By department"}
@@ -78,7 +78,7 @@ export function DirectoryFilters(p: Props) {
             key={d}
             onClick={() => p.onDepartment(p.department === d ? "" : d)}
             data-testid={`directory-dept-pill-${slug(d)}`}
-            className={cn("rounded-full px-3 py-1.5 font-display text-xs uppercase transition-colors", p.department === d ? "bg-white text-[#07080c]" : "bg-white/5 text-zinc-300 hover:bg-white/10")}
+            className={cn("rounded-full px-3 py-1.5 font-display text-xs uppercase transition-colors", p.department === d ? "bg-white text-[#0c0a12]" : "bg-white/5 text-zinc-300 hover:bg-white/10")}
           >
             {d}
           </button>

@@ -9,12 +9,12 @@ export function Wordmark({ className, tagline = false }: { className?: string; t
     <span className={cn("flex items-center gap-2.5", className)} data-testid="brand-wordmark">
       <LogoMark />
       <span className="flex flex-col leading-none">
-        <span className="font-display text-lg font-bold tracking-tight text-[#f4f4f0]">
+        <span className="font-display text-lg font-bold tracking-tight text-[#f7f2ec]">
           Connect<span className="bg-gradient-to-r from-[#2fb8ff] to-[#1e63ff] bg-clip-text text-transparent">Me</span>
         </span>
         {tagline && (
           <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.28em] text-zinc-400">
-            Find People <span className="text-[#2fb8ff]">•</span> Build Connections
+            Find People <span className="text-[#ffb086]">•</span> Build Connections
           </span>
         )}
       </span>

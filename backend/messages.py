@@ -6,6 +6,8 @@ from typing import Callable, List, Optional
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
+from blocks import assert_not_blocked, block_state, hidden_ids
+
 PUBLIC_FIELDS = {"_id": 0, "token_hash": 0}
 
 DEMO_REPLIES = [
@@ -39,6 +41,8 @@ class MessageOut(BaseModel):
 class ThreadOut(BaseModel):
     person: dict
     messages: List[MessageOut]
+    blocked_by_me: bool = False
+    blocked_me: bool = False
 
 
 class ConversationOut(BaseModel):
@@ -80,10 +84,13 @@ def build_messages_router(db, current_person: Callable, person_model) -> APIRout
             {"$sort": {"last.created_at": -1}},
         ]
         rows = await db.messages.aggregate(pipeline).to_list(200)
+        hidden = await hidden_ids(db, me["id"])
         out = []
         for row in rows:
             last = row["last"]
             other_id = last["recipient_id"] if last["sender_id"] == me["id"] else last["sender_id"]
+            if other_id in hidden:
+                continue
             other = await db.people.find_one({"id": other_id}, PUBLIC_FIELDS)
             if other:
                 out.append(ConversationOut(person=public(other), last_message=_out(last, me["id"]), unread=row["unread"]))
@@ -92,7 +99,8 @@ def build_messages_router(db, current_person: Callable, person_model) -> APIRout
     @router.get("/unread")
     async def unread_count(x_person_token: Optional[str] = Header(default=None)):
         me = await current_person(x_person_token)
-        n = await db.messages.count_documents({"recipient_id": me["id"], "read_at": None})
+        hidden = await hidden_ids(db, me["id"])
+        n = await db.messages.count_documents({"recipient_id": me["id"], "read_at": None, "sender_id": {"$nin": list(hidden)}})
         return {"count": n}
 
     @router.get("/{other_id}", response_model=ThreadOut)
@@ -103,12 +111,14 @@ def build_messages_router(db, current_person: Callable, person_model) -> APIRout
         await db.messages.update_many({"pair": key, "recipient_id": me["id"], "read_at": None},
                                       {"$set": {"read_at": _now().isoformat()}})
         docs = await db.messages.find({"pair": key}, {"_id": 0}).sort("created_at", 1).to_list(500)
-        return ThreadOut(person=public(other), messages=[_out(d, me["id"]) for d in docs])
+        state = await block_state(db, me["id"], other_id)
+        return ThreadOut(person=public(other), messages=[_out(d, me["id"]) for d in docs], **state.model_dump())
 
     @router.post("/{other_id}", response_model=List[MessageOut])
     async def send_message(other_id: str, body: MessageCreate, x_person_token: Optional[str] = Header(default=None)):
         me = await current_person(x_person_token)
         other = await other_person(other_id, me["id"])
+        await assert_not_blocked(db, me["id"], other_id)
         key = pair_key(me["id"], other_id)
         text = " ".join(body.text.split())
         if not text:

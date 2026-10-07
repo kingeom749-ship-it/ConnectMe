@@ -11,7 +11,7 @@ import { useRefresh } from "../lib/queries";
 import { cn } from "../lib/utils";
 
 const STATUS: Record<RequestStatus, { label: string; cls: string }> = {
-  pending: { label: "Pending", cls: "border-[#2fb8ff]/40 text-[#2fb8ff]" },
+  pending: { label: "Pending", cls: "border-[#ffb086]/40 text-[#ffb086]" },
   shared: { label: "Sharing", cls: "border-[#34d399]/50 bg-[#34d399]/10 text-[#34d399]" },
   declined: { label: "Declined", cls: "border-white/15 text-zinc-300" },
   revoked: { label: "Revoked", cls: "border-white/15 text-zinc-300" },
@@ -49,7 +49,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
   const token = active?.token ?? "";
 
   return (
-    <article data-testid={`request-card-${r.id}`} className="rounded-[28px] border border-white/10 bg-[#0e1016] p-5 sm:p-6">
+    <article data-testid={`request-card-${r.id}`} className="rounded-[28px] border border-white/10 bg-[#15111d] p-5 sm:p-6">
       <div className="flex items-start gap-4">
         <Avatar name={person?.name ?? "?"} seed={person?.id ?? r.id} />
         <div className="min-w-0 flex-1">
@@ -63,15 +63,15 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
         <span className={cn("rounded-full border px-3 py-1 text-xs", s.cls)} data-testid="request-status-badge">{s.label}</span>
       </div>
       {person && (
-        <Link to={`/messages/${person.id}`} data-testid="request-card-message-link" className="mt-4 inline-flex items-center gap-2 text-sm text-zinc-300 transition-colors hover:text-[#2fb8ff]">
-          <MessageCircle className="h-4 w-4 text-[#2fb8ff]" /> Message {person.name.split(" ")[0]} privately
+        <Link to={`/messages/${person.id}`} data-testid="request-card-message-link" className="mt-4 inline-flex items-center gap-2 text-sm text-zinc-300 transition-colors hover:text-[#ffb086]">
+          <MessageCircle className="h-4 w-4 text-[#ffb086]" /> Message {person.name.split(" ")[0]} privately
         </Link>
       )}
       {r.note && <p className="mt-4 rounded-2xl bg-white/[0.03] px-4 py-3 text-sm text-zinc-200">“{r.note}”</p>}
 
       {direction === "incoming" && r.status === "pending" && (
         <div className="mt-5 flex flex-col gap-2 sm:flex-row">
-          <button onClick={() => onShare(r)} disabled={busy} data-testid="location-inbox-accept-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#34d399] py-3 text-sm font-semibold text-[#07080c] transition-transform hover:scale-[1.02]">
+          <button onClick={() => onShare(r)} disabled={busy} data-testid="location-inbox-accept-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#34d399] py-3 text-sm font-semibold text-[#0c0a12] transition-transform hover:scale-[1.02]">
             <Check className="h-4 w-4" /> Share approximate location
           </button>
           <button onClick={() => act(() => api.respond(token, r.id, { accept: false }), "Request declined. Nothing was shared.")} disabled={busy} data-testid="location-inbox-decline-btn" className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/15 py-3 text-sm text-white hover:bg-white/5">
@@ -86,7 +86,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
             <span className="relative grid h-3 w-3 place-items-center"><span className="pulse-ring absolute inset-0 rounded-full bg-[#34d399]" /><span className="h-2 w-2 rounded-full bg-[#34d399]" /></span>
             Shared until {time(r.location.expires_at)}
           </span>
-          <button onClick={() => act(() => api.revoke(token, r.id), "Location sharing revoked.")} disabled={busy} data-testid="location-sharing-revoke-btn" className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#07080c] hover:bg-rose-200">
+          <button onClick={() => act(() => api.revoke(token, r.id), "Location sharing revoked.")} disabled={busy} data-testid="location-sharing-revoke-btn" className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#0c0a12] hover:bg-rose-200">
             Revoke now
           </button>
         </div>
