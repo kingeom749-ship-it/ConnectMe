@@ -1,0 +1,35 @@
+{
+  "summary": "Frontend-only iteration 2: covered Emergent Google auth callback, Google sign-in buttons, theme/logo, Block & Report end-to-end, Message alerts (toast + chime + title badge + nav-unread-count), alert-sound-toggle persistence, and regressions (meetup countdown, Enter-to-send, mobile thread-back-link). All targeted flows PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_results": {
+    "theme_and_logo": "PASS — hero-register-cta bg = rgb(255,176,134); nav logo /logo-mark.png; nav Join button peach.",
+    "auth_callback_bogus": "PASS — /auth/callback#session_id=bogus redirects to /register, no runtime overlay, graceful 401 handled.",
+    "auth_callback_cookie": "PASS — httpOnly cookie session_token=test_session_ui_fbd02810628f ⇒ /auth/callback redirects to /directory; nav-profile-menu-btn shows 'Neha Verma' with avatar img.",
+    "google_buttons": "PASS — reg-google-signin-btn navigates to https://auth.emergentagent.com/?redirect=<origin>/auth/callback (contains auth%2Fcallback). messages-google-signin-btn and requests-google-signin-btn render on signed-out pages. profile-google-signin-btn present inside signed-in profile menu.",
+    "block_report": "PASS — thread-block-btn opens block-report-modal 'Block Aarav?', reasons (spam-or-scam) + report checkbox + confirm. Toast 'Aarav blocked and reported'; redirected to /messages; conversation-item disappears; blocked-list-toggle shows 'Blocked people (1)'; blocked-item + unblock-btn present; directory hides Aarav for Neha; anonymous visitor still sees Aarav; /messages/<aaravId> shows thread-blocked-notice, message-input absent, thread-unblock-btn present. Unblock restores composer and directory visibility. member-card-block-btn on directory card also opens same modal.",
+    "message_alerts": "PASS — Ravi→Neha POST /api/conversations/{nehaId} {text}. Within ~2s a sonner toast titled 'Ravi Sharma' with message text and Open action appeared on Neha's /directory tab. Clicking Open navigates to /messages/<raviId>. Within ~5s title gained '(1) ' prefix and nav-unread-count badge showed '1'. When already viewing the thread, incoming messages do NOT toast (verified).",
+    "alert_sound_toggle": "PASS — alert-sound-toggle initial aria-pressed=true; click flips to false and localStorage connectme.alertSound.v1='off'; persists across reload.",
+    "regression_requests": "PASS — meetup-countdown and contact-reveal present on /requests.",
+    "regression_enter_send": "PASS — Enter in message-input sends and bubble appears.",
+    "regression_mobile": "PASS — 390px /messages/<id> shows thread-back-link."
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "POST /api/conversations/{id} expects field name 'text' (not 'body') — field naming is consistent in UI, only noted for future API doc clarity.",
+    "nav-unread-count / document.title badge updates on polling interval (observed within ~5s). Toast is near-instant. Consider sharing the same source so title updates feel as snappy as the toast."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (frontend-only run)", "frontend": "100%"},
+  "test_credentials": "localStorage profile (Neha / Ravi) from /app/memory/test_credentials.md. Google session cookie test_session_ui_fbd02810628f confirmed working via /auth/callback and /api/auth/me.",
+  "seed_data_creation": "Ephemeral messages Ravi→Neha ('Alert ping ...', 'No-toast ...', 'Badge test ...'). Blocked Aarav then unblocked (state restored). alertSound.v1 toggled off then back to default.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All iteration-2 flows pass. If reproducing message-alerts title/badge, poll up to ~8s after send (updates arrive via unread polling in ~3-6s). Toast appears via message polling within ~2s. Always use JSON field 'text' when POSTing to /api/conversations/{id}. Remember to unblock after any block test — blocking also auto-declines location requests.",
+  "rca of the issue": "N/A — no bugs reproduced in this iteration."
+}
