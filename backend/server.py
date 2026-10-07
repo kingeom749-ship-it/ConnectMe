@@ -23,7 +23,8 @@ db = client[os.environ['DB_NAME']]
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
-INTERESTS = ["dancing", "gaming", "sports", "writing", "singing"]
+INTERESTS = ["dancing", "gaming", "sports", "writing", "singing",
+             "ai-building", "content-creation", "run-club", "pickleball", "anime", "photography", "music-production"]
 DEPARTMENTS = ["B.Tech", "BE", "MBA", "CDAC", "Pharmacy"]
 SHARE_MINUTES = 60
 PUBLIC_FIELDS = {"_id": 0, "token_hash": 0}
@@ -389,6 +390,14 @@ DEMO_PEOPLE = [
     ("Sana Qureshi", ["singing"], "B.Tech"),
     ("Nikhil Joshi", ["gaming", "writing"], "Pharmacy"),
     ("Tara Menon", ["dancing", "sports"], "BE"),
+    ("Aditya Rao", ["ai-building", "gaming"], "CDAC"),
+    ("Priya Desai", ["content-creation", "dancing"], "MBA"),
+    ("Yash Malhotra", ["run-club", "sports"], "B.Tech"),
+    ("Sneha Kulkarni", ["pickleball", "run-club"], "Pharmacy"),
+    ("Dev Bhatt", ["anime", "gaming", "ai-building"], "BE"),
+    ("Riya Chatterjee", ["photography", "content-creation"], "MBA"),
+    ("Karan Singh", ["music-production", "singing"], "B.Tech"),
+    ("Ishaan Verma", ["ai-building", "photography"], "CDAC"),
 ]
 
 
@@ -398,12 +407,13 @@ async def seed():
     await db.people.create_index("id", unique=True)
     await db.location_requests.create_index("id", unique=True)
     await db.otp_codes.create_index("phone", unique=True)
-    if await db.people.count_documents({"is_demo": True}):
-        return
     base = now() - timedelta(days=30)
     for i, (name, interests, dept) in enumerate(DEMO_PEOPLE):
+        phone = f"+9100000000{i:02d}"
+        if await db.people.find_one({"phone": phone}, {"_id": 1}):
+            continue
         await db.people.insert_one({
-            "id": str(uuid.uuid4()), "name": name, "phone": f"+9100000000{i:02d}", "interests": interests,
+            "id": str(uuid.uuid4()), "name": name, "phone": phone, "interests": interests,
             "department": dept, "accepts_location_requests": i % 4 != 3, "is_demo": True,
             "created_at": (base + timedelta(hours=i)).isoformat(), "token_hash": hash_token(secrets.token_urlsafe(32)),
         })

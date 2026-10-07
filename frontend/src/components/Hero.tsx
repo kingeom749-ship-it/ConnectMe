@@ -7,11 +7,13 @@ import { MaskLines } from "./Reveal";
 import { INTERESTS } from "../lib/data";
 import { useMeta } from "../lib/queries";
 
+const ORBIT = INTERESTS.filter((it) => it.trending).concat(INTERESTS.filter((it) => !it.trending)).slice(0, 8);
+
 function Orbit() {
   return (
-    <div className="relative mx-auto h-[300px] w-full [--card-h:150px] [--card-w:110px] [--r:170px] [perspective:1100px] sm:h-[380px] sm:[--r:220px] lg:h-[560px] lg:[--card-h:250px] lg:[--card-w:180px] lg:[--r:290px]">
+    <div className="relative mx-auto h-[300px] w-full [--card-h:150px] [--card-w:110px] [--r:190px] [perspective:1100px] sm:h-[380px] sm:[--r:240px] lg:h-[560px] lg:[--card-h:250px] lg:[--card-w:180px] lg:[--r:320px]">
       <div className="orbit-ring absolute left-1/2 top-1/2">
-        {INTERESTS.map((it, i) => (
+        {ORBIT.map((it, i) => (
           <div
             key={it.id}
             className="absolute left-0 top-0 overflow-hidden rounded-2xl ring-1 ring-white/20"
@@ -20,7 +22,7 @@ function Orbit() {
               height: "var(--card-h)",
               marginLeft: "calc(var(--card-w) / -2)",
               marginTop: "calc(var(--card-h) / -2)",
-              transform: `rotateY(${i * 72}deg) translateZ(var(--r))`,
+              transform: `rotateY(${(i * 360) / ORBIT.length}deg) translateZ(var(--r))`,
             }}
           >
             <img src={it.image} alt={it.label} className="h-full w-full object-cover" />
@@ -65,7 +67,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto grid max-w-7xl gap-6 px-5 md:px-8 lg:grid-cols-12 lg:items-center">
         <motion.div style={{ y: textY }} className="lg:col-span-7">
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="eyebrow mb-6">
-            Campus network · 5 scenes · 5 departments
+            Campus network · {INTERESTS.length} scenes · 5 departments
           </motion.p>
           <h1 className="font-display text-4xl font-bold uppercase leading-[0.95] tracking-tight text-[#f4f4f0] sm:text-6xl lg:text-7xl">
             <MaskLines

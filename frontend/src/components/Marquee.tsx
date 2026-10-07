@@ -1,7 +1,8 @@
 import { Fragment } from "react";
 import { Asterisk } from "lucide-react";
+import { DEPARTMENTS, INTERESTS } from "../lib/data";
 
-const WORDS = ["Dancing", "Gaming", "Sports", "Writing", "Singing", "B.Tech", "BE", "MBA", "CDAC", "Pharmacy"];
+const WORDS = [...INTERESTS.map((i) => i.label), ...DEPARTMENTS];
 
 export function Marquee() {
   const row = (copy: number) => (

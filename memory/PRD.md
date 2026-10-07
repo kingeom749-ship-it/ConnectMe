@@ -33,6 +33,9 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 ## Implemented (2026-10-07, iteration 4)
 - Contact reveal: once a meet-up spot is accepted by both parties, `LocationRequestOut.contact_phone` carries the counterpart's full number (null otherwise — phone stays masked until mutual confirmation). `ContactReveal.tsx` shows the number with Call (`tel:`) and WhatsApp (`wa.me` prefilled message) buttons under the countdown.
 
+## Implemented (2026-10-07, iteration 5)
+- 7 trending-2026 interests added (12 total): ai-building "AI & Vibe Coding", content-creation, run-club, pickleball "Pickleball & Padel", anime "Anime & Cosplay", photography "Photography & Film", music-production. `Interest.trending` flag drives "Trending 2026" tags on landing + registration cards. Hero orbit shows 8 cards (trending first) with dynamic angles; registration grid is now 2/3/4 columns; marquee derives from data. Backend INTERESTS validation + /api/meta counts updated; 9 new demo members seeded idempotently (seed now upserts per demo phone).
+
 ## Backlog
 - P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
 - P2: Profile editing, avatar upload, notifications
