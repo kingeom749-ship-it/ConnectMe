@@ -12,6 +12,7 @@ from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 import uuid
 from datetime import datetime, timezone, timedelta
+from otp import build_otp_router, consume_verification, normalize_phone
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -32,11 +33,6 @@ def now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def normalize_phone(raw: str) -> str:
-    digits = re.sub(r"\D", "", raw)
-    return ("+" if raw.strip().startswith("+") else "") + digits
-
-
 def mask_phone(phone: str) -> str:
     digits = re.sub(r"\D", "", phone)
     prefix = f"+{digits[:-10]} " if phone.startswith("+") and len(digits) > 10 else ""
@@ -53,6 +49,7 @@ class PersonCreate(BaseModel):
     interests: List[str] = Field(min_length=1)
     department: str
     accepts_location_requests: bool = False
+    verification_token: str = Field(min_length=10)
 
     @field_validator("name")
     @classmethod
@@ -122,6 +119,15 @@ class SharedLocation(BaseModel):
     expires_at: str
 
 
+class Meetup(BaseModel):
+    lat: float
+    lng: float
+    label: str
+    status: str
+    proposed_by_me: bool
+    proposed_at: str
+
+
 class LocationRequestOut(BaseModel):
     id: str
     status: str
@@ -130,7 +136,18 @@ class LocationRequestOut(BaseModel):
     responded_at: Optional[str] = None
     counterpart: Optional[Person] = None
     location: Optional[SharedLocation] = None
+    meetup: Optional[Meetup] = None
     is_demo: bool = False
+
+
+class MeetupCreate(BaseModel):
+    lat: float = Field(ge=-90, le=90)
+    lng: float = Field(ge=-180, le=180)
+    label: str = Field(min_length=2, max_length=60)
+
+
+class MeetupRespond(BaseModel):
+    accept: bool
 
 
 class RequestCreate(BaseModel):
@@ -164,13 +181,17 @@ async def serialize_request(doc: dict, viewer_id: str) -> LocationRequestOut:
     other_id = doc["target_id"] if doc["requester_id"] == viewer_id else doc["requester_id"]
     other = await db.people.find_one({"id": other_id}, PUBLIC_FIELDS)
     status = effective_status(doc)
-    location = None
+    location = meetup = None
     if status == "shared" and doc.get("location"):
         location = SharedLocation(**doc["location"], shared_at=doc["responded_at"], expires_at=doc["expires_at"])
+        m = doc.get("meetup")
+        if m:
+            meetup = Meetup(lat=m["lat"], lng=m["lng"], label=m["label"], status=m["status"],
+                            proposed_by_me=m["proposed_by"] == viewer_id, proposed_at=m["proposed_at"])
     return LocationRequestOut(
         id=doc["id"], status=status, note=doc.get("note", ""), created_at=doc["created_at"],
         responded_at=doc.get("responded_at"), counterpart=Person.from_mongo(other) if other else None,
-        location=location, is_demo=doc.get("is_demo", False),
+        location=location, meetup=meetup, is_demo=doc.get("is_demo", False),
     )
 
 
@@ -193,8 +214,9 @@ async def meta():
 async def register(body: PersonCreate):
     if await db.people.find_one({"phone": body.phone}, {"_id": 1}):
         raise HTTPException(409, "This phone number is already registered")
+    await consume_verification(db, body.phone, body.verification_token)
     token = secrets.token_urlsafe(32)
-    doc = {**body.model_dump(), "id": str(uuid.uuid4()), "is_demo": False,
+    doc = {**body.model_dump(exclude={"verification_token"}), "phone_verified": True, "id": str(uuid.uuid4()), "is_demo": False,
            "created_at": now().isoformat(), "token_hash": hash_token(token)}
     await db.people.insert_one(doc)
     if body.accepts_location_requests:
@@ -293,7 +315,7 @@ async def revoke(request_id: str, x_person_token: Optional[str] = Header(default
     person = await current_person(x_person_token)
     doc = await owned_request(request_id, person["id"], "target_id")
     update = {"status": "revoked", "responded_at": now().isoformat()}
-    await db.location_requests.update_one({"id": request_id}, {"$set": update, "$unset": {"location": "", "expires_at": ""}})
+    await db.location_requests.update_one({"id": request_id}, {"$set": update, "$unset": {"location": "", "expires_at": "", "meetup": ""}})
     doc.pop("location", None)
     return await serialize_request({**doc, **update}, person["id"])
 
@@ -303,9 +325,42 @@ async def cancel(request_id: str, x_person_token: Optional[str] = Header(default
     person = await current_person(x_person_token)
     doc = await owned_request(request_id, person["id"], "requester_id")
     update = {"status": "cancelled"}
-    await db.location_requests.update_one({"id": request_id}, {"$set": update, "$unset": {"location": "", "expires_at": ""}})
+    await db.location_requests.update_one({"id": request_id}, {"$set": update, "$unset": {"location": "", "expires_at": "", "meetup": ""}})
     doc.pop("location", None)
     return await serialize_request({**doc, **update}, person["id"])
+
+
+async def shared_request_for(request_id: str, person_id: str) -> dict:
+    doc = await db.location_requests.find_one({"id": request_id}, {"_id": 0})
+    if not doc or person_id not in (doc["requester_id"], doc["target_id"]):
+        raise HTTPException(404, "Request not found")
+    if effective_status(doc) != "shared":
+        raise HTTPException(400, "Meet-up spots can only be set while a location is being shared")
+    return doc
+
+
+@api_router.post("/location-requests/{request_id}/meetup", response_model=LocationRequestOut)
+async def propose_meetup(request_id: str, body: MeetupCreate, x_person_token: Optional[str] = Header(default=None)):
+    person = await current_person(x_person_token)
+    doc = await shared_request_for(request_id, person["id"])
+    meetup = {"lat": round(body.lat, 5), "lng": round(body.lng, 5), "label": " ".join(body.label.split()),
+              "status": "proposed", "proposed_by": person["id"], "proposed_at": now().isoformat()}
+    await db.location_requests.update_one({"id": request_id}, {"$set": {"meetup": meetup}})
+    return await serialize_request({**doc, "meetup": meetup}, person["id"])
+
+
+@api_router.post("/location-requests/{request_id}/meetup/respond", response_model=LocationRequestOut)
+async def respond_meetup(request_id: str, body: MeetupRespond, x_person_token: Optional[str] = Header(default=None)):
+    person = await current_person(x_person_token)
+    doc = await shared_request_for(request_id, person["id"])
+    meetup = doc.get("meetup")
+    if not meetup or meetup["status"] != "proposed":
+        raise HTTPException(400, "There's no meet-up spot waiting for an answer")
+    if meetup["proposed_by"] == person["id"]:
+        raise HTTPException(403, "The other person needs to answer your suggestion")
+    meetup = {**meetup, "status": "accepted" if body.accept else "declined"}
+    await db.location_requests.update_one({"id": request_id}, {"$set": {"meetup": meetup}})
+    return await serialize_request({**doc, "meetup": meetup}, person["id"])
 
 
 DEMO_PEOPLE = [
@@ -329,6 +384,7 @@ async def seed():
     await db.people.create_index("phone", unique=True)
     await db.people.create_index("id", unique=True)
     await db.location_requests.create_index("id", unique=True)
+    await db.otp_codes.create_index("phone", unique=True)
     if await db.people.count_documents({"is_demo": True}):
         return
     base = now() - timedelta(days=30)
@@ -341,6 +397,7 @@ async def seed():
 
 
 app.include_router(api_router)
+app.include_router(build_otp_router(db))
 
 app.add_middleware(
     CORSMiddleware,

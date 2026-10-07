@@ -36,7 +36,23 @@ export interface LocationRequest {
   responded_at: string | null;
   counterpart: Person | null;
   location: SharedLocation | null;
+  meetup: Meetup | null;
   is_demo: boolean;
+}
+
+export interface Meetup {
+  lat: number;
+  lng: number;
+  label: string;
+  status: "proposed" | "accepted" | "declined";
+  proposed_by_me: boolean;
+  proposed_at: string;
+}
+
+export interface OtpSent {
+  phone: string;
+  mode: "sms" | "demo";
+  demo_code?: string;
 }
 
 export interface Meta {
@@ -80,6 +96,7 @@ export interface RegisterInput {
   interests: InterestId[];
   department: Department;
   accepts_location_requests: boolean;
+  verification_token: string;
 }
 
 export const api = {
@@ -97,4 +114,11 @@ export const api = {
     req<LocationRequest>(`/location-requests/${id}/respond`, { method: "POST", token, body }),
   revoke: (token: string, id: string) => req<LocationRequest>(`/location-requests/${id}/revoke`, { method: "POST", token }),
   cancel: (token: string, id: string) => req<LocationRequest>(`/location-requests/${id}/cancel`, { method: "POST", token }),
+  sendOtp: (phone: string) => req<OtpSent>("/otp/send", { method: "POST", body: { phone } }),
+  verifyOtp: (phone: string, code: string) =>
+    req<{ phone: string; verification_token: string }>("/otp/verify", { method: "POST", body: { phone, code } }),
+  proposeMeetup: (token: string, id: string, body: { lat: number; lng: number; label: string }) =>
+    req<LocationRequest>(`/location-requests/${id}/meetup`, { method: "POST", token, body }),
+  respondMeetup: (token: string, id: string, accept: boolean) =>
+    req<LocationRequest>(`/location-requests/${id}/meetup/respond`, { method: "POST", token, body: { accept } }),
 };

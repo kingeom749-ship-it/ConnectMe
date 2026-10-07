@@ -21,8 +21,12 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 - Requests inbox: approve (consent modal → browser geolocation) / decline / revoke; sent requests show OSM map when shared
 - Demo request auto-created for new users who opt in
 
+## Implemented (2026-10-07, iteration 2)
+- Phone OTP verification before registration (/api/otp/send, /api/otp/verify; registration requires verification_token). Twilio Verify used automatically when TWILIO_* env vars are set; otherwise DEMO mode returns code to UI (MOCKED SMS). 30s resend gap, 5 attempts, 10-min code TTL. 10-digit numbers default to +91.
+- Meet-up pins: on a shared request either party taps a Leaflet map (OSM tiles, dark filter) to drop a named pin; other party accepts/declines; confirmed spot shows Directions link. Endpoints /api/location-requests/{id}/meetup and /meetup/respond; cleared on revoke/cancel.
+
 ## Backlog
-- P1: Real login (OTP / phone verification) instead of per-browser tokens
+- P1: Connect real Twilio Verify keys (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE in backend/.env) — currently DEMO mode shows code on screen
 - P1: Contact action (call/WhatsApp) after mutual consent
 - P2: Profile editing, avatar upload, notifications
 

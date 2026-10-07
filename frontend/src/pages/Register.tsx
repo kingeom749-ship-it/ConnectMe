@@ -16,7 +16,7 @@ import { useRefresh } from "../lib/queries";
 import { cn } from "../lib/utils";
 
 const STEPS = [
-  { title: "Who are you?", hint: "Your name and the number people can reach you on." },
+  { title: "Who are you?", hint: "Your name, and a quick code to prove the number is yours." },
   { title: "What do you love?", hint: "Pick one or more scenes. You can belong to many." },
   { title: "Your department", hint: "So people can find you by course, too." },
   { title: "Location consent", hint: "You're in control. Review and decide." },
@@ -32,6 +32,8 @@ export default function Register() {
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
   const [saving, setSaving] = useState(false);
   const [created, setCreated] = useState<Me | null>(null);
+  const [verification, setVerification] = useState<{ phone: string; token: string } | null>(null);
+  const verified = verification?.phone === phone;
   const { addProfile } = useSession();
   const refresh = useRefresh();
 
@@ -44,23 +46,31 @@ export default function Register() {
     return !e.name && !e.phone;
   };
 
-  const canNext = [true, interests.length > 0, department !== null, true][step];
+  const canNext = [verified, interests.length > 0, department !== null, true][step];
 
   const next = async () => {
     if (step === 0 && !validateIdentity()) return;
     if (step < 3) return setStep(step + 1);
-    if (!department) return;
+    if (!department || !verification) return;
     setSaving(true);
     try {
-      const res = await api.register({ name, phone, interests, department, accepts_location_requests: consent });
+      const res = await api.register({
+        name,
+        phone,
+        interests,
+        department,
+        accepts_location_requests: consent,
+        verification_token: verification.token,
+      });
       addProfile({ id: res.person.id, name: res.person.name, token: res.token });
       setCreated(res.person);
       refresh();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Registration failed";
       toast.error(msg);
-      if (/phone/i.test(msg)) {
+      if (/phone|verify/i.test(msg)) {
         setErrors({ phone: msg });
+        setVerification(null);
         setStep(0);
       }
     } finally {
@@ -112,7 +122,17 @@ export default function Register() {
           </div>
 
           <motion.div key={step} initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
-            {step === 0 && <StepIdentity name={name} phone={phone} onName={setName} onPhone={setPhone} errors={errors} />}
+            {step === 0 && (
+              <StepIdentity
+                name={name}
+                phone={phone}
+                onName={setName}
+                onPhone={setPhone}
+                errors={errors}
+                verified={verified}
+                onVerified={(token) => setVerification({ phone, token })}
+              />
+            )}
             {step === 1 && <StepInterests value={interests} onChange={setInterests} />}
             {step === 2 && <StepDepartment value={department} onChange={setDepartment} />}
             {step === 3 && <StepConsent consent={consent} onConsent={setConsent} summary={{ name, phone, interests, department }} />}

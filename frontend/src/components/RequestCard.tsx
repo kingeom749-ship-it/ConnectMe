@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Check, Clock, ExternalLink, MapPin, X } from "lucide-react";
+import { Check, Clock, MapPin, X } from "lucide-react";
 import { toast } from "sonner";
 import { Avatar } from "./Avatar";
+import { MeetupPanel } from "./MeetupPanel";
 import { api } from "../lib/api";
-import type { LocationRequest, RequestStatus, SharedLocation } from "../lib/api";
+import type { LocationRequest, RequestStatus } from "../lib/api";
 import { useSession } from "../lib/session";
 import { useRefresh } from "../lib/queries";
 import { cn } from "../lib/utils";
@@ -18,27 +19,6 @@ const STATUS: Record<RequestStatus, { label: string; cls: string }> = {
 };
 
 const time = (iso: string) => new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-
-function LocationView({ loc }: { loc: SharedLocation }) {
-  const d = 0.012;
-  const bbox = `${loc.lng - d},${loc.lat - d},${loc.lng + d},${loc.lat + d}`;
-  return (
-    <div className="mt-5 overflow-hidden rounded-2xl border border-[#34d399]/30" data-testid="shared-location-view">
-      <iframe
-        title="Approximate shared location"
-        src={`https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${loc.lat},${loc.lng}`}
-        className="h-56 w-full border-0 grayscale invert-[0.9] hue-rotate-180"
-        loading="lazy"
-      />
-      <div className="flex flex-wrap items-center justify-between gap-2 bg-[#34d399]/[0.06] px-4 py-3 text-sm">
-        <span className="font-mono text-zinc-200">≈ {loc.lat.toFixed(2)}, {loc.lng.toFixed(2)} · ±{Math.round((loc.accuracy_m ?? 1000) / 1000)} km</span>
-        <a href={`https://www.openstreetmap.org/?mlat=${loc.lat}&mlon=${loc.lng}#map=14/${loc.lat}/${loc.lng}`} target="_blank" rel="noreferrer" data-testid="shared-location-open-map-link" className="inline-flex items-center gap-1 text-[#34d399] hover:underline">
-          Open map <ExternalLink className="h-3.5 w-3.5" />
-        </a>
-      </div>
-    </div>
-  );
-}
 
 interface Props {
   request: LocationRequest;
@@ -105,6 +85,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
           </button>
         </div>
       )}
+      {direction === "incoming" && r.status === "shared" && r.location && <MeetupPanel request={r} loc={r.location} />}
 
       {direction === "outgoing" && r.status === "pending" && (
         <div className="mt-5 flex items-center justify-between gap-3">
@@ -118,7 +99,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
       {direction === "outgoing" && r.status === "shared" && r.location && (
         <>
           <p className="mt-4 flex items-center gap-2 text-sm text-[#34d399]"><MapPin className="h-4 w-4" /> Shared with you until {time(r.location.expires_at)}</p>
-          <LocationView loc={r.location} />
+          <MeetupPanel request={r} loc={r.location} />
         </>
       )}
     </article>
