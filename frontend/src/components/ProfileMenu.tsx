@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
-import { Check, ChevronDown, LogOut, UserPlus } from "lucide-react";
+import { Check, ChevronDown, LogOut, Pencil, UserPlus } from "lucide-react";
 import { GoogleButton } from "./GoogleButton";
 import { Avatar } from "./Avatar";
 import { useSession } from "../lib/session";
@@ -60,6 +60,14 @@ export function ProfileMenu() {
               </button>
             ))}
             <div className="my-2 h-px bg-white/10" />
+            <Link
+              to="/profile"
+              onClick={() => setOpen(false)}
+              data-testid="profile-edit-link"
+              className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-zinc-200 hover:bg-white/5"
+            >
+              <Pencil className="h-4 w-4" /> Edit my profile
+            </Link>
             <Link
               to="/register"
               onClick={() => setOpen(false)}

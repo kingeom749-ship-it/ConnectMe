@@ -47,9 +47,12 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 - Emergent Google sign-in: /app/backend/auth.py — POST /api/auth/google/session (server-side exchange, `user_sessions` {session_token,email,name,picture,person_id,expires_at}, httpOnly cookie), GET /api/auth/me (cookie or Bearer; 409 registration_required when unlinked), POST /api/auth/logout. People link by `google_email` (unique sparse). Session tokens also work as X-Person-Token. New Google users finish normal registration (phone OTP still required) with `google_session_token` in POST /api/people. Frontend: GoogleButton (register step 1, signed-out Messages/Requests, profile menu), /auth/callback + hash detection in App.tsx, Google picture avatars. Tests: backend/tests/test_auth.py, test_blocks.py; frontend test_reports/iteration_2.json all pass. Docs: /app/auth_testing.md.
 - Deployment health check: PASS (no findings).
 
+## Implemented (2026-10-07, iteration 8)
+- Profile editing: PATCH /api/me (ProfileUpdate: name, picture, interests, department, accepts_location_requests; phone immutable). Picture = https URL (Google) or data:image/(jpeg|png|webp) base64 ≤400KB — stored on the person document (no object storage). Frontend /profile (Profile.tsx) reuses StepInterests/StepDepartment, PhotoPicker.tsx crops+resizes client-side to 256px JPEG, sticky save bar with dirty state; "Edit my profile" in the profile menu; Avatar shows pictures everywhere. Tests: backend/tests/test_profile.py (11 total passing); UI verified via screenshot flow.
+
 ## Backlog
 - P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
-- P2: Profile editing, avatar upload, notifications
+- P2: notifications (push/email)
 
 ## Next tasks
 - Phone OTP verification, contact reveal after accepted request

@@ -11,6 +11,7 @@ import Directory from "./pages/Directory";
 import Requests from "./pages/Requests";
 import Messages from "./pages/Messages";
 import AuthCallback from "./pages/AuthCallback";
+import Profile from "./pages/Profile";
 
 function AppRoutes() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function AppRoutes() {
       <Route path="/requests" element={<Requests />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/messages/:personId" element={<Messages />} />
+      <Route path="/profile" element={<Profile />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="*" element={<Landing />} />
     </Routes>

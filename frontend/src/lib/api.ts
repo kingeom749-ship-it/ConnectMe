@@ -136,6 +136,14 @@ async function req<T>(path: string, opts: Opts = {}): Promise<T> {
   return data as T;
 }
 
+export interface ProfileUpdate {
+  name?: string;
+  picture?: string;
+  interests?: InterestId[];
+  department?: Department;
+  accepts_location_requests?: boolean;
+}
+
 export interface RegisterInput {
   name: string;
   phone: string;
@@ -154,6 +162,7 @@ export const api = {
     return req<Person[]>(`/people?${s.toString()}`, { token });
   },
   register: (body: RegisterInput) => req<{ person: Me; token: string }>("/people", { method: "POST", body }),
+  me: (token: string) => req<Me>("/me", { token }),
   inbox: (token: string) => req<Inbox>("/location-requests", { token }),
   requestLocation: (token: string, target_id: string, note: string) =>
     req<LocationRequest>("/location-requests", { method: "POST", token, body: { target_id, note } }),
@@ -173,6 +182,7 @@ export const api = {
   thread: (token: string, otherId: string) => req<Thread>(`/conversations/${otherId}`, { token }),
   sendMessage: (token: string, otherId: string, text: string) =>
     req<Message[]>(`/conversations/${otherId}`, { method: "POST", token, body: { text } }),
+  updateMe: (token: string, body: ProfileUpdate) => req<Me>("/me", { method: "PATCH", token, body }),
   googleSession: (session_id: string) =>
     req<GoogleSessionResult>("/auth/google/session", { method: "POST", body: { session_id }, credentials: "include" }),
   authMe: () => req<{ person: Me; token: string }>("/auth/me", { credentials: "include" }),

@@ -88,6 +88,33 @@ class PersonCreate(BaseModel):
         return v
 
 
+PICTURE_RE = re.compile(r"^data:image/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$")
+PICTURE_MAX = 400_000
+
+
+class ProfileUpdate(BaseModel):
+    name: Optional[str] = Field(default=None, min_length=2, max_length=60)
+    picture: Optional[str] = None
+    interests: Optional[List[str]] = Field(default=None, min_length=1)
+    department: Optional[str] = None
+    accepts_location_requests: Optional[bool] = None
+
+    clean_name = field_validator("name")(PersonCreate.clean_name.__func__)
+    check_interests = field_validator("interests")(PersonCreate.check_interests.__func__)
+    check_department = field_validator("department")(PersonCreate.check_department.__func__)
+
+    @field_validator("picture")
+    @classmethod
+    def check_picture(cls, v: Optional[str]) -> Optional[str]:
+        if v is None or v == "" or v.startswith("https://"):
+            return v
+        if len(v) > PICTURE_MAX:
+            raise ValueError("Photo is too large — keep it under 300KB")
+        if not PICTURE_RE.match(v):
+            raise ValueError("Photo must be a JPEG, PNG or WebP image")
+        return v
+
+
 class Person(BaseModel):
     id: str
     name: str
@@ -277,6 +304,16 @@ async def list_people(q: str = "", interest: str = "", department: str = "", x_p
 @api_router.get("/me", response_model=Me)
 async def me(x_person_token: Optional[str] = Header(default=None)):
     return Me.from_mongo(await current_person(x_person_token))
+
+
+@api_router.patch("/me", response_model=Me)
+async def update_me(body: ProfileUpdate, x_person_token: Optional[str] = Header(default=None)):
+    person = await current_person(x_person_token)
+    changes = body.model_dump(exclude_none=True)
+    if not changes:
+        raise HTTPException(400, "Nothing to update")
+    await db.people.update_one({"id": person["id"]}, {"$set": {**changes, "updated_at": now().isoformat()}})
+    return Me.from_mongo(await db.people.find_one({"id": person["id"]}, {"_id": 0}))
 
 
 @api_router.get("/location-requests")
