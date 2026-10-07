@@ -1,0 +1,86 @@
+import { motion } from "motion/react";
+import { Check, Clock, MapPin, MapPinOff, Phone } from "lucide-react";
+import { Avatar } from "./Avatar";
+import { TiltCard } from "./TiltCard";
+import { INTEREST_MAP } from "../lib/data";
+import type { Person, RequestStatus } from "../lib/api";
+import { cn } from "../lib/utils";
+
+interface Props {
+  person: Person;
+  index: number;
+  isSelf: boolean;
+  requestStatus: RequestStatus | null;
+  onRequest: (p: Person) => void;
+}
+
+function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index">) {
+  const base = "mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-[background-color,transform,color] duration-300";
+  if (isSelf) return <span className={cn(base, "border border-white/10 text-zinc-400")}>This is you</span>;
+  if (!person.accepts_location_requests)
+    return (
+      <span className={cn(base, "border border-white/10 text-zinc-400")} data-testid="member-card-not-accepting">
+        <MapPinOff className="h-4 w-4" /> Not accepting requests
+      </span>
+    );
+  if (requestStatus === "pending")
+    return (
+      <span className={cn(base, "border border-[#d7ff3a]/40 text-[#d7ff3a]")} data-testid="member-card-request-pending">
+        <Clock className="h-4 w-4" /> Request pending
+      </span>
+    );
+  if (requestStatus === "shared")
+    return (
+      <span className={cn(base, "bg-[#34d399]/15 text-[#34d399]")} data-testid="member-card-request-shared">
+        <Check className="h-4 w-4" /> Sharing with you
+      </span>
+    );
+  return (
+    <button onClick={() => onRequest(person)} data-testid="member-card-request-location-btn" className={cn(base, "bg-white text-[#07080c] hover:scale-[1.02] hover:bg-[#d7ff3a]")}>
+      <MapPin className="h-4 w-4" /> Request location
+    </button>
+  );
+}
+
+export function MemberCard(props: Props) {
+  const { person, index } = props;
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: Math.min(index, 8) * 0.04, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <TiltCard max={5} className="h-full">
+        <article data-testid={`member-card-${person.id}`} className="flex h-full flex-col rounded-[28px] border border-white/10 bg-[#0e1016] p-5 transition-colors hover:border-white/25 sm:p-6">
+          <div className="flex items-start gap-4">
+            <Avatar name={person.name} seed={person.id} />
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate font-semibold text-white">{person.name}</h3>
+              <p className="mt-0.5 flex items-center gap-1.5 font-mono text-xs text-zinc-400">
+                <Phone className="h-3 w-3" /> {person.phone_masked}
+              </p>
+            </div>
+            <span className="rounded-full border border-white/15 px-3 py-1 font-display text-[11px] uppercase text-white">{person.department}</span>
+          </div>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {person.interests.map((i) => {
+              const it = INTEREST_MAP[i];
+              if (!it) return null;
+              const Icon = it.icon;
+              return (
+                <span key={i} className="inline-flex items-center gap-1.5 rounded-full bg-white/5 px-3 py-1.5 text-xs text-zinc-200">
+                  <Icon className="h-3.5 w-3.5 text-[#d7ff3a]" /> {it.label}
+                </span>
+              );
+            })}
+            {person.is_demo && <span className="rounded-full border border-dashed border-white/20 px-3 py-1.5 text-xs text-zinc-400">Demo</span>}
+          </div>
+          <div className="mt-auto">
+            <RequestButton {...props} />
+          </div>
+        </article>
+      </TiltCard>
+    </motion.div>
+  );
+}

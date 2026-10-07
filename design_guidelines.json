@@ -1,0 +1,144 @@
+{
+  "project_info": {
+    "name": "ConnectMe",
+    "tagline": "Consent-First Student & Professional Network",
+    "theme": "Awwwards-level Dark Editorial & Kinetic Cybernetic",
+    "tech_stack": {
+      "framework": "React.js (JavaScript - .js files)",
+      "styling": "Tailwind CSS + Custom Keyframes & Motion",
+      "animations": "framer-motion (11.18.0)",
+      "icons": "lucide-react",
+      "components": "shadcn/ui primitives + custom styled components"
+    }
+  },
+  "design_system": {
+    "color_palette": {
+      "background_dark": "#090A0F",
+      "surface_dark": "#12141F",
+      "surface_card": "#1A1D2D",
+      "surface_glass": "rgba(26, 29, 45, 0.75)",
+      "border_subtle": "rgba(255, 255, 255, 0.12)",
+      "border_active": "#6366F1",
+      "primary_accent": "#6366F1",
+      "primary_hover": "#4F46E5",
+      "secondary_glow": "#8B5CF6",
+      "highlight_amber": "#F59E0B",
+      "location_emerald": "#10B981",
+      "text_main": "#F8FAFC",
+      "text_muted": "#94A3B8",
+      "text_dim": "#64748B"
+    },
+    "typography": {
+      "headline_font": "Plus Jakarta Sans, Outfit, sans-serif",
+      "body_font": "Inter, system-ui, sans-serif",
+      "hero_h1": "text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none",
+      "section_h2": "text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight",
+      "card_title": "text-xl font-semibold tracking-wide",
+      "caption": "text-xs uppercase tracking-widest text-indigo-400 font-mono"
+    },
+    "spacing_and_layout": {
+      "container_max": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
+      "hero_padding": "pt-32 pb-20 md:pt-40 md:pb-32",
+      "section_gap": "py-20 md:py-28",
+      "card_padding": "p-6 sm:p-8"
+    }
+  },
+  "key_components": {
+    "InteractiveHoverLinks": {
+      "file_path": "/app/frontend/src/components/ui/interactive-hover-links.js",
+      "description": "Large kinetic text links list for interest categories (Dancing, Gaming, Sports, Writing, Singing). Revealing a floating cursor-following image + arrow on hover.",
+      "behavior": "Uses framer-motion for smooth position tracking of floating image preview and rotation tilt."
+    },
+    "KineticHero": {
+      "file_path": "/app/frontend/src/components/KineticHero.js",
+      "description": "Line-by-line masked text reveal on page load, 3D tilt card hero visual (CSS 3D perspective + framer-motion mouse movement tilt, zero heavy dependencies).",
+      "features": ["3D Card Tilt on MouseMove", "Line Reveal Animation", "Interactive Quick Registration Trigger CTA"]
+    },
+    "EditorialMarquee": {
+      "file_path": "/app/frontend/src/components/EditorialMarquee.js",
+      "description": "Slow, smooth drifting marquee banner showcasing categories, departments, and live connection highlights with high visual polish."
+    },
+    "RegistrationWizard": {
+      "file_path": "/app/frontend/src/components/RegistrationWizard.js",
+      "description": "4-Step Registration Modal / View",
+      "steps": [
+        "Step 1: Identity & Phone (Full Name, Phone Number, Optional Avatar)",
+        "Step 2: Interest Categories Multi-Select (Dancing, Gaming, Sports, Writing, Singing) with Unsplash Image Cards & Active Check Badges",
+        "Step 3: Department Select (B.Tech, BE, MBA, CDAC, Pharmacy) with badge tags",
+        "Step 4: Consent-Based Location Sharing Toggle (Clear explanation: Location is shared ONLY on request with explicit approval)",
+        "Step 5: Completion Confirmation & Immediate Redirect to Directory"
+      ]
+    },
+    "DirectoryAndFilter": {
+      "file_path": "/app/frontend/src/components/DirectoryAndFilter.js",
+      "description": "Directory grid of registered members with live search by name, category filter tabs, department filter pills, and Location Request actions.",
+      "features": ["Name Search Input", "Category Pills", "Department Select", "Member Card with badges, interests, and Request Location CTA"]
+    },
+    "ConsentLocationManager": {
+      "file_path": "/app/frontend/src/components/ConsentLocationManager.js",
+      "description": "Consent-first location sharing engine & Notification Inbox",
+      "rules": [
+        "No automatic or covert location tracking",
+        "Explicit Request -> Target user receives inbox alert ('User X requests your approximate location')",
+        "Target user approves/declines via Browser Geolocation API consent UI",
+        "Active shared locations show approximate distance, timestamp, and a prominent REVOKE LOCATION SHARING button"
+      ]
+    }
+  },
+  "curated_image_urls": {
+    "interests": {
+      "Dancing": "https://images.unsplash.com/photo-1547153760-18fc86324498?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzNzl8MHwxfHNlYXJjaHxfHxkYW5jaW5nJTIwY2hvcmVvZ3JhcGh5JTIwc3RhZ2UlMjBwZXJmb3JtYW5jZXxlbnwwfHx8fDE3OTEzNzU3NTB8MA&ixlib=rb-4.1.0&q=85",
+      "Gaming": "https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjAzMzN8MHwxfHNlYXJjaHxffGdhbWluZyUyMGVzcG9ydHMlMjBuZW9uJTIwc2V0dXAlMjBnYW1lcnxlbnwwfHx8fDE3OTEzNzU3NTB8MA&ixlib=rb-4.1.0&q=85",
+      "Sports": "https://images.unsplash.com/photo-1758922769578-68c5ba000d87?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHxffHNwb3J0cyUyMGF0aGxldGUlMjB3b3Jrb3V0JTIwcnVubmluZyUyMGZpZWxkfGVufDB8fHx8MTc9MTM3NTc1MHww&ixlib=rb-4.1.0&q=85",
+      "Writing": "https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHxffHdyaXRpbmclMjBub3RlYm9vayUyMHBlbiUyMGF1dGhvciUyMGNyZWF0aXZlfGVufDB8fHx8MTc5MTM3NTczfDA&ixlib=rb-4.1.0&q=85",
+      "Singing": "https://images.unsplash.com/photo-1595422656857-ced3a4a0ce25?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2ODh8MHwxfHNlYXJjaHxffHNpbmdpbmclMjBhcnRpc3QlMjBtaWNyb3Bob25lJTIwc3R1ZGlvJTIwY29uY2VydHxlbnwwfHx8fDE3OTEzNzU3NTN8MA&ixlib=rb-4.1.0&q=85"
+    },
+    "avatars": [
+      "https://images.unsplash.com/photo-1765650113773-0752556dcea0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHxffHBvcnRyYWl0JTIwc3R1ZGVudCUyMHlvdW5nJTIwYWR1bHQlMjBzbWlsaW5nfGVufDB8fHx8MTc5MTM3NTczfDA&ixlib=rb-4.1.0&q=85",
+      "https://images.unsplash.com/photo-1611181355758-089959e2cfb2?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHxffHBvcnRyYWl0JTIwc3R1ZGVudCUyMHlvdW5nJTIwYWR1bHQlMjBzbWlsaW5nfGVufDB8fHx8MTc5MTM3NTczfDA&ixlib=rb-4.1.0&q=85"
+    ]
+  },
+  "testing_requirements": {
+    "data_testid_convention": "kebab-case",
+    "required_test_ids": [
+      "nav-brand-logo",
+      "nav-register-btn",
+      "nav-directory-btn",
+      "hero-register-cta",
+      "hover-link-item-dancing",
+      "hover-link-item-gaming",
+      "hover-link-item-sports",
+      "hover-link-item-writing",
+      "hover-link-item-singing",
+      "reg-step1-name-input",
+      "reg-step1-phone-input",
+      "reg-step1-next-btn",
+      "reg-step2-interest-card-dancing",
+      "reg-step2-interest-card-gaming",
+      "reg-step2-interest-card-sports",
+      "reg-step2-interest-card-writing",
+      "reg-step2-interest-card-singing",
+      "reg-step2-next-btn",
+      "reg-step3-dept-select",
+      "reg-step3-next-btn",
+      "reg-step4-location-consent-toggle",
+      "reg-step4-submit-btn",
+      "directory-search-input",
+      "directory-category-filter-all",
+      "directory-department-filter-select",
+      "member-card-request-location-btn",
+      "location-request-modal-confirm-btn",
+      "location-inbox-accept-btn",
+      "location-inbox-decline-btn",
+      "location-sharing-revoke-btn"
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Use JavaScript (.js) files in /src",
+    "Build InteractiveHoverLinks in /src/components/ui/interactive-hover-links.js with cursor-following floating image & tilt arrow",
+    "Build clear consent-first privacy banner & modal flow for location sharing",
+    "Include pre-seeded mock users with departments (B.Tech, BE, MBA, CDAC, Pharmacy) and interest categories",
+    "Ensure all key buttons, inputs, tabs, cards have explicit data-testid attributes",
+    "Use smooth Lenis scroll feel or framer-motion smooth transitions throughout"
+  ]
+}
