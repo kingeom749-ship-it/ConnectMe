@@ -54,6 +54,7 @@ def _twilio_check(phone: str, code: str) -> bool:
 
 class SendBody(BaseModel):
     phone: str = Field(min_length=7, max_length=20)
+    purpose: str = Field(default="register", pattern="^(register|login)$")
 
 
 class VerifyBody(BaseModel):
@@ -74,8 +75,11 @@ def build_otp_router(db) -> APIRouter:
     @router.post("/send")
     async def send(body: SendBody):
         phone = valid_phone(body.phone)
-        if await db.people.find_one({"phone": phone}, {"_id": 1}):
-            raise HTTPException(409, "This phone number is already registered")
+        registered = await db.people.find_one({"phone": phone}, {"_id": 1}) is not None
+        if body.purpose == "register" and registered:
+            raise HTTPException(409, "This phone number is already registered — log in instead")
+        if body.purpose == "login" and not registered:
+            raise HTTPException(404, "No profile with this number yet — register first")
         prev = await db.otp_codes.find_one({"phone": phone}, {"_id": 0})
         if prev and prev.get("last_sent_at", "") > (_now() - RESEND_GAP).isoformat():
             raise HTTPException(429, "Please wait 30 seconds before requesting another code")

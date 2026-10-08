@@ -1,4 +1,3 @@
-import secrets
 import uuid
 from datetime import datetime, timezone
 from typing import Callable, List, Optional
@@ -9,13 +8,6 @@ from pydantic import BaseModel, Field
 from blocks import assert_not_blocked, block_state, hidden_ids
 
 PUBLIC_FIELDS = {"_id": 0, "token_hash": 0}
-
-DEMO_REPLIES = [
-    "Hey! I'm a demo member, so this is an automatic reply — but real members answer for themselves.",
-    "Nice to hear from you! Only the two of us can see this thread.",
-    "Sounds good — try sending a location request if you want to meet up.",
-]
-
 
 def _now() -> datetime:
     return datetime.now(timezone.utc)
@@ -117,7 +109,7 @@ def build_messages_router(db, current_person: Callable, person_model) -> APIRout
     @router.post("/{other_id}", response_model=List[MessageOut])
     async def send_message(other_id: str, body: MessageCreate, x_person_token: Optional[str] = Header(default=None)):
         me = await current_person(x_person_token)
-        other = await other_person(other_id, me["id"])
+        await other_person(other_id, me["id"])
         await assert_not_blocked(db, me["id"], other_id)
         key = pair_key(me["id"], other_id)
         text = " ".join(body.text.split())
@@ -127,11 +119,6 @@ def build_messages_router(db, current_person: Callable, person_model) -> APIRout
             "id": str(uuid.uuid4()), "pair": key, "participants": [me["id"], other_id], "sender_id": me["id"],
             "recipient_id": other_id, "text": text, "created_at": _now().isoformat(), "read_at": None,
         }]
-        if other.get("is_demo"):
-            docs.append({
-                "id": str(uuid.uuid4()), "pair": key, "participants": [me["id"], other_id], "sender_id": other_id,
-                "recipient_id": me["id"], "text": secrets.choice(DEMO_REPLIES), "created_at": _now().isoformat(), "read_at": None,
-            })
         await db.messages.insert_many(docs)
         return [_out(d, me["id"]) for d in docs]
 

@@ -7,9 +7,10 @@ If no person exists yet, the Google user finishes the normal registration (phone
 and POST /api/people links the pending session via `google_session_token`.
 """
 import logging
+import secrets
 import uuid
 from datetime import datetime, timedelta, timezone
-from typing import Callable, Optional
+from typing import Optional
 
 import httpx
 from fastapi import APIRouter, Header, HTTPException, Request, Response
@@ -19,6 +20,7 @@ logger = logging.getLogger("auth")
 
 SESSION_DATA_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
 SESSION_TTL = timedelta(days=7)
+LOGIN_TTL = timedelta(days=90)
 COOKIE = "session_token"
 
 
@@ -63,6 +65,11 @@ class SessionBody(BaseModel):
     session_id: str
 
 
+class PhoneLoginBody(BaseModel):
+    phone: str
+    verification_token: str
+
+
 def _token_from(request: Request, authorization: Optional[str]) -> Optional[str]:
     if request.cookies.get(COOKIE):
         return request.cookies[COOKIE]
@@ -75,8 +82,25 @@ def _set_cookie(response: Response, token: str) -> None:
     response.set_cookie(COOKIE, token, max_age=int(SESSION_TTL.total_seconds()), httponly=True, secure=True, samesite="none", path="/")
 
 
-def build_auth_router(db, me_model) -> APIRouter:
+def build_auth_router(db, me_model, consume_verification, normalize_phone) -> APIRouter:
     router = APIRouter(prefix="/api/auth")
+
+    @router.post("/login")
+    async def phone_login(body: PhoneLoginBody, response: Response):
+        """Returning members: a fresh OTP on their registered number issues a new device session."""
+        phone = normalize_phone(body.phone)
+        person = await db.people.find_one({"phone": phone}, {"_id": 0})
+        if not person:
+            raise HTTPException(404, "No profile with this number yet — register first")
+        await consume_verification(db, phone, body.verification_token)
+        token = "pl_" + secrets.token_urlsafe(32)
+        await db.user_sessions.insert_one({
+            "id": str(uuid.uuid4()), "session_token": token, "email": person.get("google_email"), "name": person["name"],
+            "picture": person.get("picture", ""), "person_id": person["id"], "kind": "phone",
+            "expires_at": (_now() + LOGIN_TTL).isoformat(), "created_at": _now().isoformat(),
+        })
+        _set_cookie(response, token)
+        return {"person": me_model.from_mongo(person), "token": token}
 
     @router.post("/google/session")
     async def google_session(body: SessionBody, response: Response):

@@ -57,7 +57,7 @@ export function RequestCard({ request: r, direction, onShare }: Props) {
             {direction === "incoming" ? `${person?.name ?? "Someone"} asks for your location` : `You asked ${person?.name ?? "someone"}`}
           </p>
           <p className="mt-0.5 text-xs text-zinc-400">
-            {person?.department} · {time(r.created_at)} {r.is_demo && "· demo request"}
+            {person?.department} · {time(r.created_at)}
           </p>
         </div>
         <span className={cn("rounded-full border px-3 py-1 text-xs", s.cls)} data-testid="request-status-badge">{s.label}</span>

@@ -13,6 +13,7 @@ const LINKS = [
   { to: "/directory", label: "Directory", id: "directory" },
   { to: "/requests", label: "Requests", id: "requests" },
   { to: "/messages", label: "Messages", id: "messages" },
+  { to: "/profile", label: "Profile", id: "profile" },
 ];
 
 function PendingBadge() {
@@ -74,6 +75,10 @@ export function Nav() {
           {active ? (
             <ProfileMenu />
           ) : (
+            <>
+            <Link to="/login" data-testid="nav-login-btn" className="hidden rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-white/40 sm:inline-flex">
+              Log in
+            </Link>
             <Link
               to="/register"
               data-testid="nav-register-btn"
@@ -81,6 +86,7 @@ export function Nav() {
             >
               Join
             </Link>
+            </>
           )}
           <button
             onClick={() => setOpen((v) => !v)}
@@ -117,9 +123,14 @@ export function Nav() {
               </Link>
             ))}
             {!active && (
-              <Link to="/register" data-testid="mobile-nav-register-link" className="mt-2 block rounded-2xl bg-[#ffb086] px-4 py-4 text-center font-semibold text-[#0c0a12]">
-                Start registration
-              </Link>
+              <>
+                <Link to="/login" data-testid="mobile-nav-login-link" className="mt-2 block rounded-2xl border border-white/15 px-4 py-4 text-center font-medium text-white">
+                  Log in
+                </Link>
+                <Link to="/register" data-testid="mobile-nav-register-link" className="mt-2 block rounded-2xl bg-[#ffb086] px-4 py-4 text-center font-semibold text-[#0c0a12]">
+                  Start registration
+                </Link>
+              </>
             )}
           </motion.div>
         )}

@@ -9,12 +9,13 @@ interface Props {
   phone: string;
   verified: boolean;
   onVerified: (token: string) => void;
+  purpose?: "register" | "login";
 }
 
 const btn =
   "inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-full px-6 text-sm font-semibold transition-[transform,opacity] hover:scale-[1.03] active:scale-95 disabled:pointer-events-none disabled:opacity-40";
 
-export function PhoneVerify({ phone, verified, onVerified }: Props) {
+export function PhoneVerify({ phone, verified, onVerified, purpose = "register" }: Props) {
   const meta = useMeta();
   const [sent, setSent] = useState<OtpSent | null>(null);
   const [code, setCode] = useState("");
@@ -33,7 +34,7 @@ export function PhoneVerify({ phone, verified, onVerified }: Props) {
     setBusy(true);
     setError("");
     try {
-      const res = await api.sendOtp(phone);
+      const res = await api.sendOtp(phone, purpose);
       setSent(res);
       setCode("");
       setCooldown(30);

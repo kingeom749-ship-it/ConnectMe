@@ -31,13 +31,14 @@ function ProfileForm({ me, token }: { me: Me; token: string }) {
   const refresh = useRefresh();
   const [name, setName] = useState(me.name);
   const [picture, setPicture] = useState(me.picture);
+  const [bio, setBio] = useState(me.bio);
   const [interests, setInterests] = useState<InterestId[]>(me.interests);
   const [department, setDepartment] = useState<Department | null>(me.department);
   const [consent, setConsent] = useState(me.accepts_location_requests);
   const [busy, setBusy] = useState(false);
 
   const dirty =
-    name.trim() !== me.name || picture !== me.picture || consent !== me.accepts_location_requests || department !== me.department ||
+    name.trim() !== me.name || picture !== me.picture || bio.trim() !== me.bio || consent !== me.accepts_location_requests || department !== me.department ||
     interests.length !== me.interests.length || interests.some((i) => !me.interests.includes(i));
 
   const save = async () => {
@@ -48,7 +49,7 @@ function ProfileForm({ me, token }: { me: Me; token: string }) {
     if (!department) return;
     setBusy(true);
     try {
-      const updated = await api.updateMe(token, { name: name.trim(), picture, interests, department, accepts_location_requests: consent });
+      const updated = await api.updateMe(token, { name: name.trim(), picture, bio: bio.trim(), interests, department, accepts_location_requests: consent });
       addProfile({ id: updated.id, name: updated.name, token, picture: updated.picture });
       refresh();
       toast.success("Profile updated");
@@ -71,6 +72,19 @@ function ProfileForm({ me, token }: { me: Me; token: string }) {
               onChange={(e) => setName(e.target.value.slice(0, 60))}
               data-testid="profile-name-input"
               className="h-14 rounded-2xl border border-white/10 bg-white/[0.03] px-5 text-white placeholder:text-zinc-500 focus:border-[#ffb086] focus:outline-none"
+            />
+          </label>
+          <label className="grid gap-2">
+            <span className="flex items-center justify-between font-mono text-xs uppercase tracking-[0.2em] text-zinc-400">
+              About you <span className="text-zinc-500">{bio.length}/160</span>
+            </span>
+            <textarea
+              value={bio}
+              onChange={(e) => setBio(e.target.value.slice(0, 160))}
+              rows={2}
+              placeholder="One line about you — what you're into, what you're looking for."
+              data-testid="profile-bio-input"
+              className="resize-none rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-4 text-white placeholder:text-zinc-500 focus:border-[#ffb086] focus:outline-none"
             />
           </label>
           <p className="flex items-center gap-2 text-sm text-zinc-400" data-testid="profile-phone">

@@ -66,6 +66,7 @@ export function MemberCard(props: Props) {
             </div>
             <span className="rounded-full border border-white/15 px-3 py-1 font-display text-[11px] uppercase text-white">{person.department}</span>
           </div>
+          {person.bio && <p className="mt-4 line-clamp-2 text-sm text-zinc-300" data-testid="member-card-bio">{person.bio}</p>}
           <div className="mt-5 flex flex-wrap gap-2">
             {person.interests.map((i) => {
               const it = INTEREST_MAP[i];
@@ -77,7 +78,6 @@ export function MemberCard(props: Props) {
                 </span>
               );
             })}
-            {person.is_demo && <span className="rounded-full border border-dashed border-white/20 px-3 py-1.5 text-xs text-zinc-400">Demo</span>}
           </div>
           <div className="mt-auto">
             <RequestButton {...props} />

@@ -36,7 +36,7 @@ export function RegisterDone({ person }: { person: Me }) {
         </div>
         {person.accepts_location_requests && (
           <p className="mx-auto mt-6 flex max-w-sm items-center justify-center gap-2 text-sm text-zinc-300">
-            <Bell className="h-4 w-4 text-[#ffb086]" /> A demo location request is waiting in your inbox.
+            <Bell className="h-4 w-4 text-[#ffb086]" /> You'll be notified here when someone asks for your location.
           </p>
         )}
         <div className="mt-10 flex flex-wrap justify-center gap-3">

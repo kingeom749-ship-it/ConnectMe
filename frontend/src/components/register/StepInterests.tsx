@@ -39,6 +39,8 @@ export function StepInterests({ value, onChange }: Props) {
                 <img
                   src={it.image}
                   alt={it.label}
+                  loading="lazy"
+                  decoding="async"
                   className={cn("absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110", !on && "grayscale-[35%]")}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />

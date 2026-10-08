@@ -143,7 +143,7 @@ function MeetupStatus({ request: r, other, busy, onSuggest, onAnswer }: StatusPr
   }
 
   const text = m.status === "proposed"
-    ? `You suggested “${m.label}” — waiting for ${other}${r.is_demo || r.counterpart?.is_demo ? " (demo members don't reply)" : ""}.`
+    ? `You suggested “${m.label}” — waiting for ${other}.`
     : m.proposed_by_me ? `${other} declined “${m.label}”.` : `You declined “${m.label}”.`;
   return <div className={row} data-testid="meetup-status"><p className="text-sm text-zinc-200">{text}</p>{suggestBtn(m.status === "proposed" ? "Change spot" : "Suggest another")}</div>;
 }

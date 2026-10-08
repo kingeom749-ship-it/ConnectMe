@@ -22,7 +22,7 @@ def register(name, phone):
 @pytest.fixture(scope="module")
 def trio():
     suffix = str(int(time.time()))[-7:]
-    return register("Msg A", f"+9179{suffix}1"), register("Msg B", f"+9179{suffix}2"), register("Msg C", f"+9179{suffix}3")
+    return register("ZZTest Msg A", f"+9179{suffix}1"), register("ZZTest Msg B", f"+9179{suffix}2"), register("ZZTest Msg C", f"+9179{suffix}3")
 
 
 def test_private_thread_between_two_people(trio):
@@ -54,10 +54,3 @@ def test_guards(trio):
     assert requests.post(f"{API}/conversations/nope", json={"text": "x"}, headers=ha).status_code == 404
     assert requests.post(f"{API}/conversations/{aid}", json={"text": "x"}).status_code == 401
     assert requests.post(f"{API}/conversations/{aid}", json={"text": "   "}, headers=ha).status_code in (400, 422)
-
-
-def test_demo_member_auto_replies(trio):
-    (_, ha), _, _ = trio
-    demo = requests.get(f"{API}/people?q=Aarav").json()[0]
-    out = requests.post(f"{API}/conversations/{demo['id']}", json={"text": "hi"}, headers=ha).json()
-    assert len(out) == 2 and out[0]["mine"] and not out[1]["mine"]

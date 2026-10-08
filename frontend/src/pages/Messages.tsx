@@ -113,7 +113,7 @@ export default function Messages() {
                   <Avatar name={other.name} seed={other.id} src={other.picture} />
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold text-white">{other.name}</p>
-                    <p className="truncate text-xs text-zinc-400">{other.department}{other.is_demo && " · demo member (auto-replies)"}</p>
+                    <p className="truncate text-xs text-zinc-400">{other.department}</p>
                   </div>
                   <Link to={`/directory?q=${encodeURIComponent(other.name)}`} data-testid="thread-directory-link" className="hidden items-center gap-1.5 rounded-full border border-white/10 px-3 py-1.5 text-xs text-zinc-200 hover:border-white/30 sm:inline-flex">
                     <MapPin className="h-3.5 w-3.5" /> Profile

@@ -8,6 +8,7 @@ export interface Person {
   name: string;
   phone_masked: string;
   picture: string;
+  bio: string;
   interests: InterestId[];
   department: Department;
   accepts_location_requests: boolean;
@@ -139,6 +140,7 @@ async function req<T>(path: string, opts: Opts = {}): Promise<T> {
 export interface ProfileUpdate {
   name?: string;
   picture?: string;
+  bio?: string;
   interests?: InterestId[];
   department?: Department;
   accepts_location_requests?: boolean;
@@ -170,7 +172,9 @@ export const api = {
     req<LocationRequest>(`/location-requests/${id}/respond`, { method: "POST", token, body }),
   revoke: (token: string, id: string) => req<LocationRequest>(`/location-requests/${id}/revoke`, { method: "POST", token }),
   cancel: (token: string, id: string) => req<LocationRequest>(`/location-requests/${id}/cancel`, { method: "POST", token }),
-  sendOtp: (phone: string) => req<OtpSent>("/otp/send", { method: "POST", body: { phone } }),
+  sendOtp: (phone: string, purpose: "register" | "login" = "register") => req<OtpSent>("/otp/send", { method: "POST", body: { phone, purpose } }),
+  login: (phone: string, verification_token: string) =>
+    req<{ person: Me; token: string }>("/auth/login", { method: "POST", body: { phone, verification_token }, credentials: "include" }),
   verifyOtp: (phone: string, code: string) =>
     req<{ phone: string; verification_token: string }>("/otp/verify", { method: "POST", body: { phone, code } }),
   proposeMeetup: (token: string, id: string, body: { lat: number; lng: number; label: string }) =>

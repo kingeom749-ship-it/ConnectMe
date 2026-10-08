@@ -113,6 +113,11 @@
 .orbit-ring {
     animation: orbit 38s linear infinite;
     transform-style: preserve-3d;
+    will-change: transform;
+}
+.orbit-ring > div {
+    backface-visibility: hidden;
+    contain: paint;
 }
 
 .logo-float {

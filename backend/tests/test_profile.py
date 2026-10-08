@@ -19,18 +19,18 @@ def register(name, phone):
 
 
 def test_profile_update():
-    pid, h = register("Edit Me", f"+9172{str(int(time.time()))[-7:]}1")
-    r = requests.patch(f"{API}/me", json={"name": "  Edited   Name ", "interests": ["anime", "ANIME", "run-club"],
+    pid, h = register("ZZTest Edit Me", f"+9172{str(int(time.time()))[-7:]}1")
+    r = requests.patch(f"{API}/me", json={"name": "  ZZTest Edited   Name ", "interests": ["anime", "ANIME", "run-club"],
                                             "department": "MBA", "accepts_location_requests": False,
                                             "picture": "data:image/jpeg;base64,/9j/4AAQSkZJRg=="}, headers=h)
     assert r.status_code == 200, r.text
     me = r.json()
-    assert me["name"] == "Edited Name" and me["interests"] == ["anime", "run-club"] and me["department"] == "MBA"
+    assert me["name"] == "ZZTest Edited Name" and me["interests"] == ["anime", "run-club"] and me["department"] == "MBA"
     assert me["accepts_location_requests"] is False and me["picture"].startswith("data:image/jpeg;base64,")
 
     # reflected in the public directory
-    pub = next(p for p in requests.get(f"{API}/people?q=Edited").json() if p["id"] == pid)
-    assert pub["name"] == "Edited Name" and pub["picture"] == me["picture"] and "phone" not in pub
+    pub = next(p for p in requests.get(f"{API}/people?q=ZZTest Edited").json() if p["id"] == pid)
+    assert pub["name"] == "ZZTest Edited Name" and pub["picture"] == me["picture"] and "phone" not in pub
 
     # validation
     assert requests.patch(f"{API}/me", json={"interests": []}, headers=h).status_code == 422

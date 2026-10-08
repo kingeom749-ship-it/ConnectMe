@@ -25,7 +25,7 @@ function Orbit() {
               transform: `rotateY(${(i * 360) / ORBIT.length}deg) translateZ(var(--r))`,
             }}
           >
-            <img src={it.image} alt={it.label} className="h-full w-full object-cover" />
+            <img src={it.image} alt={it.label} loading={i < 3 ? "eager" : "lazy"} decoding="async" className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             <span className="absolute bottom-2 left-3 font-display text-[10px] font-semibold uppercase tracking-wider text-white lg:bottom-3 lg:text-sm">
               {it.label}

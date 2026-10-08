@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, Header, Query
+from fastapi import FastAPI, APIRouter, HTTPException, Header
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -95,6 +95,7 @@ PICTURE_MAX = 400_000
 class ProfileUpdate(BaseModel):
     name: Optional[str] = Field(default=None, min_length=2, max_length=60)
     picture: Optional[str] = None
+    bio: Optional[str] = Field(default=None, max_length=160)
     interests: Optional[List[str]] = Field(default=None, min_length=1)
     department: Optional[str] = None
     accepts_location_requests: Optional[bool] = None
@@ -102,6 +103,11 @@ class ProfileUpdate(BaseModel):
     clean_name = field_validator("name")(PersonCreate.clean_name.__func__)
     check_interests = field_validator("interests")(PersonCreate.check_interests.__func__)
     check_department = field_validator("department")(PersonCreate.check_department.__func__)
+
+    @field_validator("bio")
+    @classmethod
+    def clean_bio(cls, v: Optional[str]) -> Optional[str]:
+        return None if v is None else " ".join(v.split())
 
     @field_validator("picture")
     @classmethod
@@ -120,6 +126,7 @@ class Person(BaseModel):
     name: str
     phone_masked: str
     picture: str = ""
+    bio: str = ""
     interests: List[str]
     department: str
     accepts_location_requests: bool
@@ -267,14 +274,6 @@ async def register(body: PersonCreate):
     await db.people.insert_one(doc)
     if google:
         await link_session(db, body.google_session_token, doc["id"])
-    if body.accepts_location_requests:
-        demo = await db.people.find_one({"is_demo": True}, {"_id": 0}, sort=[("created_at", 1)])
-        if demo:
-            await db.location_requests.insert_one({
-                "id": str(uuid.uuid4()), "requester_id": demo["id"], "target_id": doc["id"],
-                "note": "Demo request — try approving or declining to see how consent works.",
-                "status": "pending", "created_at": now().isoformat(), "is_demo": True,
-            })
     return RegisterResponse(person=Me.from_mongo(doc), token=token)
 
 
@@ -297,7 +296,7 @@ async def list_people(q: str = "", interest: str = "", department: str = "", x_p
         query["phone"] = {"$regex": f"{re.escape(digits)}$"}
     elif q:
         query["name"] = {"$regex": re.escape(q), "$options": "i"}
-    docs = await db.people.find(query, PUBLIC_FIELDS).sort([("is_demo", 1), ("created_at", -1)]).to_list(500)
+    docs = await db.people.find(query, PUBLIC_FIELDS).sort("created_at", -1).to_list(500)
     return [Person.from_mongo(d) for d in docs]
 
 
@@ -431,28 +430,6 @@ async def respond_meetup(request_id: str, body: MeetupRespond, x_person_token: O
     return await serialize_request({**doc, "meetup": meetup}, person["id"])
 
 
-DEMO_PEOPLE = [
-    ("Aarav Mehta", ["gaming", "sports"], "B.Tech"),
-    ("Diya Sharma", ["dancing", "singing"], "MBA"),
-    ("Kabir Nair", ["writing"], "BE"),
-    ("Ananya Iyer", ["singing", "writing"], "Pharmacy"),
-    ("Rohan Gupta", ["sports"], "CDAC"),
-    ("Meera Pillai", ["dancing"], "B.Tech"),
-    ("Vihaan Reddy", ["gaming"], "CDAC"),
-    ("Isha Kapoor", ["writing", "dancing"], "MBA"),
-    ("Arjun Das", ["sports", "gaming"], "BE"),
-    ("Sana Qureshi", ["singing"], "B.Tech"),
-    ("Nikhil Joshi", ["gaming", "writing"], "Pharmacy"),
-    ("Tara Menon", ["dancing", "sports"], "BE"),
-    ("Aditya Rao", ["ai-building", "gaming"], "CDAC"),
-    ("Priya Desai", ["content-creation", "dancing"], "MBA"),
-    ("Yash Malhotra", ["run-club", "sports"], "B.Tech"),
-    ("Sneha Kulkarni", ["pickleball", "run-club"], "Pharmacy"),
-    ("Dev Bhatt", ["anime", "gaming", "ai-building"], "BE"),
-    ("Riya Chatterjee", ["photography", "content-creation"], "MBA"),
-    ("Karan Singh", ["music-production", "singing"], "B.Tech"),
-    ("Ishaan Verma", ["ai-building", "photography"], "CDAC"),
-]
 
 
 @app.on_event("startup")
@@ -466,23 +443,20 @@ async def seed():
     await db.blocks.create_index([("blocker_id", 1), ("blocked_id", 1)], unique=True)
     await db.user_sessions.create_index("session_token", unique=True)
     await db.people.create_index("google_email", unique=True, sparse=True)
-    base = now() - timedelta(days=30)
-    for i, (name, interests, dept) in enumerate(DEMO_PEOPLE):
-        phone = f"+9100000000{i:02d}"
-        if await db.people.find_one({"phone": phone}, {"_id": 1}):
-            continue
-        await db.people.insert_one({
-            "id": str(uuid.uuid4()), "name": name, "phone": phone, "interests": interests,
-            "department": dept, "accepts_location_requests": i % 4 != 3, "is_demo": True,
-            "created_at": (base + timedelta(hours=i)).isoformat(), "token_hash": hash_token(secrets.token_urlsafe(32)),
-        })
+    # Only real, phone-verified members belong in the directory: purge any legacy demo data.
+    demo_ids = [p["id"] async for p in db.people.find({"is_demo": True}, {"_id": 0, "id": 1})]
+    if demo_ids:
+        await db.people.delete_many({"id": {"$in": demo_ids}})
+        await db.location_requests.delete_many({"$or": [{"requester_id": {"$in": demo_ids}}, {"target_id": {"$in": demo_ids}}, {"is_demo": True}]})
+        await db.messages.delete_many({"participants": {"$in": demo_ids}})
+        await db.blocks.delete_many({"$or": [{"blocker_id": {"$in": demo_ids}}, {"blocked_id": {"$in": demo_ids}}]})
 
 
 app.include_router(api_router)
 app.include_router(build_otp_router(db))
 app.include_router(build_messages_router(db, current_person, Person))
 app.include_router(build_blocks_router(db, current_person, Person))
-app.include_router(build_auth_router(db, Me))
+app.include_router(build_auth_router(db, Me, consume_verification, normalize_phone))
 
 app.add_middleware(
     CORSMiddleware,

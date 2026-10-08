@@ -23,8 +23,8 @@ def register(name, phone, accepts=True):
 @pytest.fixture(scope="module")
 def pair():
     suffix = str(int(time.time()))[-7:]
-    a = register("Countdown A", f"+9177{suffix}1")
-    b = register("Countdown B", f"+9177{suffix}2")
+    a = register("ZZTest Countdown A", f"+9177{suffix}1")
+    b = register("ZZTest Countdown B", f"+9177{suffix}2")
     return a, b
 
 

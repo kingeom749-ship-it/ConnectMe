@@ -18,7 +18,7 @@ db = MongoClient(os.environ["MONGO_URL"])[os.environ["DB_NAME"]]
 def seed_session(email, person_id=None, expired=False):
     token = f"test_session_{uuid.uuid4().hex}"
     exp = datetime.now(timezone.utc) + (timedelta(days=-1) if expired else timedelta(days=7))
-    db.user_sessions.insert_one({"id": str(uuid.uuid4()), "session_token": token, "email": email, "name": "Goog Tester",
+    db.user_sessions.insert_one({"id": str(uuid.uuid4()), "session_token": token, "email": email, "name": "ZZTest Goog",
                                  "picture": "https://example.com/p.png", "person_id": person_id,
                                  "expires_at": exp.isoformat(), "created_at": datetime.now(timezone.utc).isoformat()})
     return token
@@ -50,7 +50,7 @@ def test_google_registration_links_person(suffix):
     sent = requests.post(f"{API}/otp/send", json={"phone": phone}).json()
     v = requests.post(f"{API}/otp/verify", json={"phone": phone, "code": sent["demo_code"]}).json()
     r = requests.post(f"{API}/people", json={
-        "name": "Goog Tester", "phone": phone, "interests": ["photography"], "department": "MBA",
+        "name": "ZZTest Goog", "phone": phone, "interests": ["photography"], "department": "MBA",
         "accepts_location_requests": False, "verification_token": v["verification_token"], "google_session_token": pending})
     assert r.status_code == 200, r.text
     person = r.json()["person"]
@@ -71,7 +71,7 @@ def test_google_registration_links_person(suffix):
     sent = requests.post(f"{API}/otp/send", json={"phone": phone2}).json()
     v = requests.post(f"{API}/otp/verify", json={"phone": phone2, "code": sent["demo_code"]}).json()
     r = requests.post(f"{API}/people", json={
-        "name": "Other One", "phone": phone2, "interests": ["gaming"], "department": "BE",
+        "name": "ZZTest Other", "phone": phone2, "interests": ["gaming"], "department": "BE",
         "accepts_location_requests": False, "verification_token": v["verification_token"], "google_session_token": pending})
     assert r.status_code == 409
 

@@ -22,7 +22,7 @@ def register(name, phone):
 @pytest.fixture(scope="module")
 def pair():
     suffix = str(int(time.time()))[-7:]
-    return register("Blk A", f"+9175{suffix}1"), register("Blk B", f"+9175{suffix}2")
+    return register("ZZTest Blk A", f"+9175{suffix}1"), register("ZZTest Blk B", f"+9175{suffix}2")
 
 
 def test_block_flow(pair):

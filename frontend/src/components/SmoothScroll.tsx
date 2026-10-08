@@ -8,7 +8,7 @@ export function SmoothScroll() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-    const lenis = new Lenis({ lerp: 0.085, smoothWheel: true });
+    const lenis = new Lenis({ lerp: 0.11, smoothWheel: true, syncTouch: false });
     lenisRef.current = lenis;
     let frame = 0;
     const raf = (t: number) => {

@@ -12,6 +12,8 @@ import Requests from "./pages/Requests";
 import Messages from "./pages/Messages";
 import AuthCallback from "./pages/AuthCallback";
 import Profile from "./pages/Profile";
+import Login from "./pages/Login";
+import { IntroOverlay } from "./components/IntroOverlay";
 
 function AppRoutes() {
   const location = useLocation();
@@ -25,6 +27,7 @@ function AppRoutes() {
       <Route path="/requests" element={<Requests />} />
       <Route path="/messages" element={<Messages />} />
       <Route path="/messages/:personId" element={<Messages />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="*" element={<Landing />} />
@@ -38,6 +41,7 @@ export default function App() {
       <SessionProvider>
         <BrowserRouter>
           <SmoothScroll />
+          <IntroOverlay />
           <Nav />
           <MessageAlerts />
           <AppRoutes />
