@@ -1,0 +1,49 @@
+{
+  "summary": "Full UI regression for ConnectMe: intro overlay, scroll constellation, directory purge of demo members, phone register+login (positive & negative), profile edit (name/bio/photo), messaging between two ZZTest users, mobile 390px nav, signed-out /messages, scrollability. All 9 UI checks PASS. Backend pytest ran 11 tests: 10 pass, 1 flaky (test_login.py::test_phone_login_flow passes in isolation, fails intermittently in full suite - potential order/concurrency bug in logout endpoint).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/auth/logout", "issue": "test_phone_login_flow is flaky: in full-suite runs the first device's X-Person-Token sometimes returns 401 after a different device's bearer token is logged out. Passes when run alone. Possible token-store concurrency / state-pollution bug or test ordering issue — needs investigation by main agent."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "flaky_tests": [
+    {"test": "backend/tests/test_login.py::test_phone_login_flow", "failure_rate": "~50% in full suite, 0% in isolation"}
+  ],
+  "verified_flows": [
+    "Intro overlay renders with logo + 'Find People. Build Connections.' animation, detaches within ~3s, and does NOT re-show on second visit same session (sessionStorage key connectme.intro.v1).",
+    "scroll-constellation canvas renders behind landing; wheel scrolling works; page scrolls to full height (6012px) with no horizontal scrollbar and no console errors.",
+    "Nav shows nav-login-btn + nav-register-btn (Join) when signed out.",
+    "Directory lists 16 real members only — no 'Aarav Mehta' / 'Diya Sharma' / 'Demo' badge.",
+    "Register ZZTest Alice (+9170123xxxxx) and ZZTest Bob via /register demo OTP: success, no 'demo location request' text in RegisterDone.",
+    "After registering Alice, /requests inbox is EMPTY (no auto demo request).",
+    "Negative register: sending OTP for Alice's already-registered phone shows 'This phone number is already registered — log in instead'.",
+    "Login: /login with Alice's phone + demo code -> redirect to /directory, nav shows Alice profile. Negative /login with unregistered phone shows 'No profile with this number yet — register first'.",
+    "Profile page: profile-bio-input works with 160 char limit; changed name to 'ZZTest Alice Edited', typed bio 'Hiking and lo-fi music enthusiast.', uploaded /app/backend/tests/fixtures/avatar.png, saved -> nav avatar is an <img>, directory member-card-bio shows the bio.",
+    "Messaging: Alice sent 'Hi Bob from ZZTest Alice' from /messages/<bob_id>; Bob sees message, nav-unread-count badge shows '1'; thread header does NOT say 'demo member'.",
+    "Mobile 390px: mobile-nav-login-link and mobile-nav-register-link ('Start registration') visible; /login layout fits viewport.",
+    "Signed-out /messages shows register-ish link + Google button."
+  ],
+  "test_report_links": ["/app/backend/tests/test_login.py", "/app/test_reports/pytest/"],
+  "action_items": [
+    "Investigate flaky test_phone_login_flow — determine if /api/auth/logout bearer handler is inadvertently invalidating sibling device tokens under concurrent access, or if conftest ZZTest purge races with the test.",
+    "Nice-to-have: add data-testid to Messages composer (message-input, message-send-btn) — currently works with generic selectors but testing is brittle."
+  ],
+  "critical_code_review_comments": [
+    "IntroOverlay sets document.documentElement.style.overflow='hidden' then clears on unmount — if a user hard-navigates during the 2.6s window this still restores correctly; good.",
+    "Login/Register share PhoneVerify with purpose prop — nice reuse. One tiny concern: PhoneVerify's 'Send' button data-testid is 'reg-otp-send-btn' even inside the Login page, which is semantically misleading but currently functional.",
+    "Profile.tsx bio dirty check uses bio.trim() !== me.bio — if a user adds only whitespace the save button correctly stays disabled; good."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "91% (10/11, 1 flaky)", "frontend": "100% (all 9 UI flows pass)"},
+  "test_credentials": "Created two throwaway ZZTest users this run — purged automatically by backend/tests/conftest.py when pytest ran at the end.",
+  "seed_data_creation": "Two ZZTest-prefixed users created via UI; cleaned up by conftest purge.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "All user-requested flows (intro, scroll bg, login, profile bio, no-demo-members, dup-phone, negative-login) are implemented and work via UI. Only outstanding item is the flaky backend test_phone_login_flow — reproduce by running `cd /app/backend && python -m pytest tests -q` twice; it fails roughly every second run. The in-isolation run always passes.",
+  "rca of the issue": "test_phone_login_flow: logout call targets token2 (bearer) but a subsequent GET /me with token1 (X-Person-Token) returns 401. Need to inspect /app/backend/auth.py logout handler — it may be deleting all sessions for the person, or the conftest's ZZTest purge may be running during the test if session-scoped teardown kicks in while another test's requests are still being processed."
+}
