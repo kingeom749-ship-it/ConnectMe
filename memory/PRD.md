@@ -59,6 +59,12 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 - Directory background: AuroraBackground (CSS aurora ribbons + drifting halftone). Fonts: Syne (display) + Manrope (body) + Instrument Serif italic accents (hero "love.", intro words); JetBrains Mono kept.
 - Known: tests/test_login.py occasionally flaky when run in the parallel suite (passes alone) — investigate ordering if it recurs.
 
+## Implemented (2026-10-13, iteration 10)
+- Public profile page /people/:id (PublicProfile.tsx) — photo, name, department, masked phone, member-since, consent state, bio, interest tiles linking to filtered directory; actions: Request location (reused RequestButton), Message privately, Block; "Edit my profile" when viewing yourself. Member card avatar/name links to it (member-card-profile-link). Backend GET /api/people/{id} (404 when either side has blocked, no phone leak).
+- Page transitions: AnimatePresence (mode="wait") wrapping Routes in App.tsx — fade/slide/blur between pages; /messages list↔thread share one key so thread switching doesn't re-animate.
+- Display font → Orbitron (Google Fonts); body Manrope, Instrument Serif italic accents kept. NOTE: public/index.html edits require `sudo supervisorctl restart frontend` (dev server caches index.html).
+- Fixed flaky pytest: xdist workers were purging each other's ZZTest accounts; cleanup now runs only in the controller via pytest_sessionfinish. Suite 3/3 green.
+
 ## Backlog
 - P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
 - P2: notifications (push/email)

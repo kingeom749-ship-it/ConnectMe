@@ -300,6 +300,18 @@ async def list_people(q: str = "", interest: str = "", department: str = "", x_p
     return [Person.from_mongo(d) for d in docs]
 
 
+@api_router.get("/people/{person_id}", response_model=Person)
+async def get_person(person_id: str, x_person_token: Optional[str] = Header(default=None)):
+    doc = await db.people.find_one({"id": person_id}, PUBLIC_FIELDS)
+    if not doc:
+        raise HTTPException(404, "Person not found")
+    if x_person_token:
+        viewer = await db.people.find_one({"token_hash": hash_token(x_person_token)}, {"_id": 0, "id": 1}) or await session_person(db, x_person_token)
+        if viewer and viewer["id"] != person_id and person_id in await hidden_ids(db, viewer["id"]):
+            raise HTTPException(404, "Person not found")
+    return Person.from_mongo(doc)
+
+
 @api_router.get("/me", response_model=Me)
 async def me(x_person_token: Optional[str] = Header(default=None)):
     return Me.from_mongo(await current_person(x_person_token))

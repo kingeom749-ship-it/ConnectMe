@@ -48,6 +48,8 @@ def test_block_flow(pair):
     assert bid not in {p["id"] for p in requests.get(f"{API}/people", headers=ha).json()}
     assert aid not in {p["id"] for p in requests.get(f"{API}/people", headers=hb).json()}
     assert aid in {p["id"] for p in requests.get(f"{API}/people").json()}  # anonymous still sees everyone
+    assert requests.get(f"{API}/people/{bid}", headers=ha).status_code == 404  # public profile hidden too
+    assert requests.get(f"{API}/people/{bid}").status_code == 200
     assert all(c["person"]["id"] != bid for c in requests.get(f"{API}/conversations", headers=ha).json())
     assert requests.get(f"{API}/conversations/unread", headers=ha).json()["count"] == 0
     t = requests.get(f"{API}/conversations/{bid}", headers=ha).json()

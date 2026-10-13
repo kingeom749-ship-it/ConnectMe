@@ -17,7 +17,7 @@ interface Props {
   onBlock: (p: Person) => void;
 }
 
-function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index" | "canMessage" | "onBlock">) {
+export function RequestButton({ person, isSelf, requestStatus, onRequest }: Omit<Props, "index" | "canMessage" | "onBlock">) {
   const base = "mt-6 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-[background-color,transform,color] duration-300";
   if (isSelf) return <span className={cn(base, "border border-white/10 text-zinc-400")}>This is you</span>;
   if (!person.accepts_location_requests)
@@ -57,6 +57,7 @@ export function MemberCard(props: Props) {
       <TiltCard max={5} className="h-full">
         <article data-testid={`member-card-${person.id}`} className="flex h-full flex-col rounded-[28px] border border-white/10 bg-[#15111d] p-5 transition-colors hover:border-white/25 sm:p-6">
           <div className="flex items-start gap-4">
+            <Link to={`/people/${person.id}`} data-testid="member-card-profile-link" className="flex min-w-0 flex-1 items-start gap-4 rounded-2xl transition-opacity hover:opacity-80">
             <Avatar name={person.name} seed={person.id} src={person.picture} />
             <div className="min-w-0 flex-1">
               <h3 className="truncate font-semibold text-white">{person.name}</h3>
@@ -64,6 +65,7 @@ export function MemberCard(props: Props) {
                 <Phone className="h-3 w-3" /> {person.phone_masked}
               </p>
             </div>
+            </Link>
             <span className="rounded-full border border-white/15 px-3 py-1 font-display text-[11px] uppercase text-white">{person.department}</span>
           </div>
           {person.bio && <p className="mt-4 line-clamp-2 text-sm text-zinc-300" data-testid="member-card-bio">{person.bio}</p>}

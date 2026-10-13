@@ -165,6 +165,7 @@ export const api = {
   },
   register: (body: RegisterInput) => req<{ person: Me; token: string }>("/people", { method: "POST", body }),
   me: (token: string) => req<Me>("/me", { token }),
+  person: (id: string, token?: string) => req<Person>(`/people/${id}`, { token }),
   inbox: (token: string) => req<Inbox>("/location-requests", { token }),
   requestLocation: (token: string, target_id: string, note: string) =>
     req<LocationRequest>("/location-requests", { method: "POST", token, body: { target_id, note } }),

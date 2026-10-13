@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Syne', 'sans-serif'],
+        display: ['Orbitron', 'sans-serif'],
         serif: ['"Instrument Serif"', 'Georgia', 'serif'],
         sans: ['Manrope', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace']

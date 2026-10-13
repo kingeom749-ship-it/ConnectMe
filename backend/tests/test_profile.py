@@ -32,6 +32,11 @@ def test_profile_update():
     pub = next(p for p in requests.get(f"{API}/people?q=ZZTest Edited").json() if p["id"] == pid)
     assert pub["name"] == "ZZTest Edited Name" and pub["picture"] == me["picture"] and "phone" not in pub
 
+    # public profile endpoint mirrors the directory card (no phone leak)
+    prof = requests.get(f"{API}/people/{pid}").json()
+    assert prof["name"] == "ZZTest Edited Name" and prof["bio"] == "" and "phone" not in prof and prof["phone_masked"]
+    assert requests.get(f"{API}/people/does-not-exist").status_code == 404
+
     # validation
     assert requests.patch(f"{API}/me", json={"interests": []}, headers=h).status_code == 422
     assert requests.patch(f"{API}/me", json={"interests": ["nope"]}, headers=h).status_code == 422

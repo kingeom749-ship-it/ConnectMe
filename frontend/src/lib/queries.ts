@@ -16,6 +16,12 @@ export function usePeople(params: Record<string, string>) {
   return useQuery<Person[]>({ queryKey: ["people", params, token], queryFn: () => api.people(params, token || undefined), retry: 1 });
 }
 
+export function usePerson(id: string | undefined) {
+  const { active } = useSession();
+  const token = active?.token ?? "";
+  return useQuery<Person>({ queryKey: ["person", id, token], queryFn: () => api.person(id as string, token || undefined), enabled: Boolean(id), retry: 1 });
+}
+
 export function useMe() {
   const { active } = useSession();
   const token = active?.token ?? "";
@@ -89,5 +95,6 @@ export function useRefresh() {
     qc.invalidateQueries({ queryKey: ["thread"] });
     qc.invalidateQueries({ queryKey: ["blocks"] });
     qc.invalidateQueries({ queryKey: ["me"] });
+    qc.invalidateQueries({ queryKey: ["person"] });
   };
 }
