@@ -50,6 +50,15 @@ Build a landing page: Continuing from [Integrate React Component]: Build the Con
 ## Implemented (2026-10-07, iteration 8)
 - Profile editing: PATCH /api/me (ProfileUpdate: name, picture, interests, department, accepts_location_requests; phone immutable). Picture = https URL (Google) or data:image/(jpeg|png|webp) base64 ≤400KB — stored on the person document (no object storage). Frontend /profile (Profile.tsx) reuses StepInterests/StepDepartment, PhotoPicker.tsx crops+resizes client-side to 256px JPEG, sticky save bar with dirty state; "Edit my profile" in the profile menu; Avatar shows pictures everywhere. Tests: backend/tests/test_profile.py (11 total passing); UI verified via screenshot flow.
 
+## Implemented (2026-10-13, iteration 9)
+- Real members only: demo seeding removed; startup purges `is_demo` people + their requests/messages/blocks; demo auto-replies and demo UI copy removed. Test accounts must be named `ZZTest …` (conftest purges them).
+- Login for returning users: /login (phone + OTP, purpose="login") → POST /api/auth/login issues a 90-day device session (user_sessions, kind "phone"); Nav shows "Log in" when signed out. OTP send now takes purpose register|login with proper 409/404 messages.
+- Profile: bio ("About you", ≤160) added to PATCH /api/me, Profile page and member cards; "Profile" nav link.
+- Intro: IntroOverlay (once per session, letter-by-letter tagline, reduced-motion aware). Landing background: ScrollConstellation canvas (scroll-velocity-reactive node network, DPR-capped, pauses when hidden).
+- Performance: images recompressed (2.5MB→1.1MB), lazy-loading, orbit will-change/contain, Lenis lerp tuned.
+- Directory background: AuroraBackground (CSS aurora ribbons + drifting halftone). Fonts: Syne (display) + Manrope (body) + Instrument Serif italic accents (hero "love.", intro words); JetBrains Mono kept.
+- Known: tests/test_login.py occasionally flaky when run in the parallel suite (passes alone) — investigate ordering if it recurs.
+
 ## Backlog
 - P1: Connect real Twilio Verify keys — add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_VERIFY_SERVICE to backend/.env and restart backend; code already switches to live SMS automatically (currently DEMO mode, MOCKED SMS)
 - P2: notifications (push/email)

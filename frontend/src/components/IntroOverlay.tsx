@@ -57,7 +57,7 @@ export function IntroOverlay() {
             />
             <h1 className="font-display text-3xl font-bold uppercase leading-[1.05] text-white sm:text-5xl lg:text-6xl">
               {WORDS.map((word, wi) => (
-                <span key={word} className={wi === 1 || wi === 3 ? "mr-[0.35em] inline-block whitespace-nowrap text-[#ffb086]" : "mr-[0.35em] inline-block whitespace-nowrap"}>
+                <span key={word} className={wi === 1 || wi === 3 ? "mr-[0.35em] inline-block whitespace-nowrap font-serif font-normal normal-case italic text-[#ffb086]" : "mr-[0.35em] inline-block whitespace-nowrap"}>
                   {word.split("").map((ch, ci) => {
                     const i = letterIndex++;
                     return (

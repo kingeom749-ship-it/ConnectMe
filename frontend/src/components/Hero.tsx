@@ -76,7 +76,7 @@ export function Hero() {
                 "Find your",
                 "people by",
                 <>
-                  what they <span className="text-[#ffb086]">love.</span>
+                  what they <span className="font-serif font-normal normal-case italic text-[#ffb086]">love.</span>
                 </>,
               ]}
             />

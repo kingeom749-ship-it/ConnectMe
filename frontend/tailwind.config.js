@@ -10,8 +10,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['Unbounded', 'sans-serif'],
-        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+        display: ['Syne', 'sans-serif'],
+        serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+        sans: ['Manrope', 'sans-serif'],
         mono: ['"JetBrains Mono"', 'monospace']
       },
       borderRadius: {

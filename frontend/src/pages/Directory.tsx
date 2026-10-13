@@ -4,6 +4,7 @@ import { Loader2, Users } from "lucide-react";
 import { MaskLines } from "../components/Reveal";
 import { DirectoryFilters } from "../components/DirectoryFilters";
 import { MemberCard } from "../components/MemberCard";
+import { AuroraBackground } from "../components/AuroraBackground";
 import { RequestLocationModal } from "../components/RequestLocationModal";
 import { BlockReportModal } from "../components/BlockReportModal";
 import { Footer } from "../components/Closing";
@@ -57,8 +58,8 @@ export default function Directory() {
 
   return (
     <main className="relative min-h-screen overflow-x-clip pt-28 md:pt-36" data-testid="directory-page">
-      <div className="pointer-events-none absolute left-0 top-0 h-[480px] w-[480px] rounded-full bg-[#ffb086]/[0.06] blur-[140px]" />
-      <div className="relative mx-auto max-w-7xl px-5 pb-24 md:px-8">
+      <AuroraBackground />
+      <div className="relative z-[1] mx-auto max-w-7xl px-5 pb-24 md:px-8">
         <div className="mb-10 flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="eyebrow mb-4">The people</p>
