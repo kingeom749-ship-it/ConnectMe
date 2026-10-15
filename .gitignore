@@ -90,3 +90,7 @@ credentials.json
 *.key
 .credentials
 frontend/node_modules/.cache/default-development/0.pack
+exports/app/frontend/node_modules/.cache/default-development/0.pack
+exports
+(1)/app/frontend/node_modules/.cache/default-development/0.pack
+app.zip
