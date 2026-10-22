@@ -94,3 +94,7 @@ exports/app/frontend/node_modules/.cache/default-development/0.pack
 exports
 (1)/app/frontend/node_modules/.cache/default-development/0.pack
 app.zip
+.env
+.env.*
+!.env.example
+node_modules/
